@@ -2,6 +2,35 @@ version: 1
 
 gateway:
   default_execution: local_reference
+  continuous_flow:
+    enabled: true
+    schedule_utc: "17 */4 * * *"
+    active_providers:
+      - google
+      - microsoft
+    cases_per_provider_run: 9
+    full_variable_coverage_runs: 5
+    variables:
+      workloads:
+        - bell
+        - ghz3
+        - rotation
+      shots:
+        - 64
+        - 256
+        - 1024
+      seeds:
+        - 7
+        - 23
+        - 101
+      rotation_quarters:
+        - 1
+        - 2
+        - 3
+    evidence_retention_days: 30
+    live_qpu_submission:
+      automatic: false
+      explicit_spending_approval_required: true
   continuation:
     human_boundary_scope: lane_only
     continue_independent_lanes: true
@@ -39,6 +68,9 @@ providers:
 
   azure_quantum:
     auth: azure_identity_and_subscription
+    account_reported_ready: true
+    local_qdk_stack_ready: true
+    github_workload_identity_configured: false
     qpu_enabled: false
 
   ionq:
@@ -67,8 +99,8 @@ providers:
     qpu_enabled: false
 
   google_quantum_engine:
+    account_reported_ready: true
     cloud_project_configured: true
     project_env: GOOGLE_CLOUD_PROJECT
-    approved_access_required: true
-    api_visible_to_project: false
+    github_workload_identity_configured: false
     qpu_enabled: false

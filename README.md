@@ -5,13 +5,27 @@ matched workloads across local reference computation, simulators, and QPUs,
 while recording enough evidence to decide whether a problem should be routed
 to quantum hardware at all.
 
+## Continuous flow
+
+GitHub runs the active Google and Microsoft formulation stacks every four
+hours. Each provider executes nine rotating cases drawn from the same 45-case
+catalog: Bell, three-qubit GHZ, and parameterized rotation workloads across
+three shot counts, three deterministic seeds, and three rotation angles. Five
+runs cover every declared combination, then the field repeats with fresh
+evidence.
+
+Every provider run publishes JSON evidence and a readable GitHub summary for
+30 days. The schedule uses credential-free Cirq and Microsoft QDK simulators.
+Live QPU submission remains separately gated because a recurring workflow must
+not create unbounded cloud charges.
+
 ## Current live access
 
 - IBM Quantum: control-plane verified; breadth smoke tests supported on every
   backend exposed by the configured instance.
-- Google Quantum Engine: dedicated Cloud project prepared; external sponsor or
-  program approval is still required.
-- Amazon Braket, Quantinuum, Azure Quantum, IonQ, Rigetti, QuEra, and Pasqal:
+- Google Quantum Engine and Microsoft Azure Quantum: accounts reported working;
+  their local provider stacks are the active continuous-flow paths.
+- Amazon Braket, Quantinuum, IonQ, Rigetti, QuEra, and Pasqal:
   live access and human approval gates are tracked in
   [`docs/provider-access-status.md`](docs/provider-access-status.md); no
   credentials are stored in this repository.
@@ -66,6 +80,14 @@ Run the full credential-free provider simulator field with the optional SDKs:
 
 These runs validate local formulation/execution readiness; they are not claims
 of provider account access or QPU execution.
+
+Run one complete continuous-flow cycle locally:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e ".[cirq,microsoft]"
+.\.venv\Scripts\python.exe scripts\run_continuous_sweep.py google --cycle 0 --output evidence\google.json
+.\.venv\Scripts\python.exe scripts\run_continuous_sweep.py microsoft --cycle 0 --output evidence\microsoft.json
+```
 
 ## Submit an IBM breadth smoke test
 
