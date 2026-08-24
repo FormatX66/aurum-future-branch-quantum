@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from aurum_quantum.aurum_seed import load_aurum_seed_build
 from aurum_quantum.continuous_sweep import (
     CASES_PER_PROVIDER_RUN,
     SUPPORTED_FLOW_PROVIDERS,
@@ -17,13 +18,22 @@ def main() -> int:
     parser.add_argument("provider", choices=SUPPORTED_FLOW_PROVIDERS)
     parser.add_argument("--cycle", type=int, required=True)
     parser.add_argument("--cases-per-run", type=int, default=CASES_PER_PROVIDER_RUN)
+    parser.add_argument("--aurum-build-manifest", type=Path, required=True)
+    parser.add_argument("--future-branch-seed", type=Path, required=True)
+    parser.add_argument("--seed-source-commit", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--summary", type=Path)
     args = parser.parse_args()
 
+    aurum_seed = load_aurum_seed_build(
+        args.aurum_build_manifest,
+        args.future_branch_seed,
+        authority_commit=args.seed_source_commit,
+    )
     result = run_continuous_sweep(
         args.provider,
         cycle=args.cycle,
+        aurum_seed=aurum_seed,
         cases_per_run=args.cases_per_run,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)

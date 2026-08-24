@@ -10,9 +10,15 @@ to quantum hardware at all.
 GitHub runs the active Google and Microsoft formulation stacks every four
 hours. Each provider executes nine rotating cases drawn from the same 45-case
 catalog: Bell, three-qubit GHZ, and parameterized rotation workloads across
-three shot counts, three deterministic seeds, and three rotation angles. Five
-runs cover every declared combination, then the field repeats with fresh
+three shot counts, three Aurum-derived seed lanes, and three rotation angles.
+Five runs cover every declared combination, then the field repeats with fresh
 evidence.
+
+Every run checks out the canonical BoxBrain `main` branch and binds the current
+TinySeed handoff plus `Prompts/FutureBranchSeed.txt` into the experiment. The
+combined fingerprint selects the catalog offset and mixes every simulator seed,
+while the build state, artifact hashes, unresolved gates, and source commits are
+recorded as evidence. Unknown seed schemas are refused instead of guessed.
 
 Every provider run publishes JSON evidence and a readable GitHub summary for
 30 days. The schedule uses credential-free Cirq and Microsoft QDK simulators.
@@ -85,8 +91,10 @@ Run one complete continuous-flow cycle locally:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -e ".[cirq,microsoft]"
-.\.venv\Scripts\python.exe scripts\run_continuous_sweep.py google --cycle 0 --output evidence\google.json
-.\.venv\Scripts\python.exe scripts\run_continuous_sweep.py microsoft --cycle 0 --output evidence\microsoft.json
+$aurumRoot = "C:\path\to\BoxBrain"
+$seedCommit = git -C $aurumRoot rev-parse HEAD
+.\.venv\Scripts\python.exe scripts\run_continuous_sweep.py google --cycle 0 --aurum-build-manifest "$aurumRoot\Projects\Aurum\Release\latest-tinyseed-handoff.json" --future-branch-seed "$aurumRoot\Prompts\FutureBranchSeed.txt" --seed-source-commit $seedCommit --output evidence\google.json
+.\.venv\Scripts\python.exe scripts\run_continuous_sweep.py microsoft --cycle 0 --aurum-build-manifest "$aurumRoot\Projects\Aurum\Release\latest-tinyseed-handoff.json" --future-branch-seed "$aurumRoot\Prompts\FutureBranchSeed.txt" --seed-source-commit $seedCommit --output evidence\microsoft.json
 ```
 
 ## Submit an IBM breadth smoke test

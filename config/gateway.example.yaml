@@ -5,6 +5,13 @@ gateway:
   continuous_flow:
     enabled: true
     schedule_utc: "17 */4 * * *"
+    aurum_seed_authority:
+      repository: https://github.com/FormatX66/BoxBrain
+      ref: main
+      build_manifest: Projects/Aurum/Release/latest-tinyseed-handoff.json
+      future_branch_seed: Prompts/FutureBranchSeed.txt
+      unknown_schema_action: refuse
+      mix_build_fingerprint_into_every_case: true
     active_providers:
       - google
       - microsoft

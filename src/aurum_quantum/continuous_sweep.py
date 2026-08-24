@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from math import pi, sin, sqrt
 from typing import Any, Callable
+
+from .aurum_seed import AurumSeedBuild
 
 
 SHOT_VALUES = (64, 256, 1024)
@@ -191,6 +193,7 @@ def run_continuous_sweep(
     provider: str,
     *,
     cycle: int,
+    aurum_seed: AurumSeedBuild,
     cases_per_run: int = CASES_PER_PROVIDER_RUN,
 ) -> dict[str, Any]:
     try:
@@ -200,12 +203,22 @@ def run_continuous_sweep(
 
     started_at = datetime.now(timezone.utc)
     case_results: list[dict[str, Any]] = []
-    for case in select_cycle_cases(cycle, cases_per_run=cases_per_run):
-        counts = runner(case)
+    coverage_runs = (len(CASE_CATALOG) + cases_per_run - 1) // cases_per_run
+    effective_cycle = cycle + aurum_seed.deterministic_seed % coverage_runs
+    for case in select_cycle_cases(effective_cycle, cases_per_run=cases_per_run):
+        effective_seed = aurum_seed.mix_case_seed(case.seed, cycle=cycle)
+        execution_case = replace(case, seed=effective_seed)
+        counts = runner(execution_case)
         evaluation = evaluate_counts(case, counts)
         case_results.append(
             {
-                "case": {**asdict(case), "case_id": case.case_id, "qubits": case.qubits},
+                "case": {
+                    **asdict(case),
+                    "case_id": case.case_id,
+                    "qubits": case.qubits,
+                    "base_seed": case.seed,
+                    "aurum_effective_seed": effective_seed,
+                },
                 "counts": counts,
                 "evaluation": evaluation,
             }
@@ -216,12 +229,13 @@ def run_continuous_sweep(
         "provider": provider,
         "execution": "credential-free-local-provider-stack",
         "cycle": cycle,
+        "effective_cycle": effective_cycle,
         "catalog_size": len(CASE_CATALOG),
         "cases_per_run": cases_per_run,
-        "full_catalog_coverage_runs": (len(CASE_CATALOG) + cases_per_run - 1)
-        // cases_per_run,
+        "full_catalog_coverage_runs": coverage_runs,
         "started_at": started_at.isoformat(),
         "finished_at": finished_at.isoformat(),
+        "aurum_seed_build": aurum_seed.to_dict(),
         "passed": all(result["evaluation"]["passed"] for result in case_results),
         "results": case_results,
     }
@@ -234,17 +248,22 @@ def render_sweep_summary(result: dict[str, Any]) -> str:
         "",
         f"- Status: **{status}**",
         f"- Cycle: `{result['cycle']}`",
+        f"- Aurum-derived cycle: `{result['effective_cycle']}`",
         f"- Cases this run: `{result['cases_per_run']}`",
         f"- Full variable coverage: `{result['full_catalog_coverage_runs']}` runs",
         "- Execution: credential-free local provider stack",
+        f"- Aurum build state: `{result['aurum_seed_build']['build_state']}`",
+        f"- Aurum next gate: `{result['aurum_seed_build']['next_gate']}`",
+        f"- Aurum fingerprint: `{result['aurum_seed_build']['combined_fingerprint']}`",
         "",
-        "| Case | Shots | Seed | Result |",
+        "| Case | Shots | Aurum seed | Result |",
         "|---|---:|---:|---|",
     ]
     for item in result["results"]:
         case = item["case"]
         case_status = "pass" if item["evaluation"]["passed"] else "fail"
         lines.append(
-            f"| `{case['case_id']}` | {case['shots']} | {case['seed']} | {case_status} |"
+            f"| `{case['case_id']}` | {case['shots']} | "
+            f"{case['aurum_effective_seed']} | {case_status} |"
         )
     return "\n".join(lines) + "\n"
