@@ -2,6 +2,12 @@ version: 1
 
 gateway:
   default_execution: local_reference
+  continuation:
+    human_boundary_scope: lane_only
+    continue_independent_lanes: true
+    continue_safe_preparation: true
+    continue_external_observation: true
+    ask_human_only_when_no_machine_route_remains: true
   qpu_execution:
     enabled: false
     explicit_confirmation_required: true
@@ -12,6 +18,45 @@ gateway:
     require_backend_and_job_id: true
 
 providers:
+  local_provider_stacks:
+    credential_free: true
+    max_parallel: 6
+    stacks:
+      - cirq
+      - amazon_braket
+      - quera_ahs
+      - pyquil
+      - pytket
+      - pulser
+
+  amazon_braket:
+    auth: aws_identity
+    qpu_enabled: false
+
+  quantinuum:
+    auth: quantinuum_identity
+    qpu_enabled: false
+
+  azure_quantum:
+    auth: azure_identity_and_subscription
+    qpu_enabled: false
+
+  ionq:
+    auth: ionq_identity
+    qpu_enabled: false
+
+  rigetti:
+    local_stack_ready: true
+    qpu_enabled: false
+
+  quera:
+    local_ahs_stack_ready: true
+    qpu_enabled: false
+
+  pasqal:
+    local_pulser_stack_ready: true
+    qpu_enabled: false
+
   ibm_quantum:
     control_plane_verified: true
     auth:
@@ -27,4 +72,3 @@ providers:
     approved_access_required: true
     api_visible_to_project: false
     qpu_enabled: false
-

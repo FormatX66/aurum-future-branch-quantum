@@ -26,6 +26,11 @@ to quantum hardware at all.
 - Local reference validation and provenance manifests are mandatory.
 - GitHub Actions runs local tests only. It never receives a QPU credential and
   never submits hardware jobs.
+- A tested progression gate scopes each human-only boundary to its own lane;
+  other safe work continues, including preparation and external observation.
+- Provider account gates do not stop independent work: CI fans out across local
+  Cirq, Amazon Braket, QuEra AHS, PyQuil, pytket, and Pulser execution lanes in
+  parallel.
 
 ## Install
 
@@ -46,6 +51,21 @@ $env:IQP_API_KEY_FILE = "C:\path\outside\the\repo\apikey.json"
 ```powershell
 .\.venv\Scripts\python.exe -m pytest
 ```
+
+Run the full credential-free provider simulator field with the optional SDKs:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e ".[test,provider-simulators]"
+.\.venv\Scripts\python.exe scripts\run_provider_smoke.py cirq
+.\.venv\Scripts\python.exe scripts\run_provider_smoke.py braket
+.\.venv\Scripts\python.exe scripts\run_provider_smoke.py quera
+.\.venv\Scripts\python.exe scripts\run_provider_smoke.py rigetti
+.\.venv\Scripts\python.exe scripts\run_provider_smoke.py quantinuum
+.\.venv\Scripts\python.exe scripts\run_provider_smoke.py pasqal
+```
+
+These runs validate local formulation/execution readiness; they are not claims
+of provider account access or QPU execution.
 
 ## Submit an IBM breadth smoke test
 
