@@ -5,6 +5,7 @@ from math import isclose
 from qiskit.quantum_info import Statevector
 
 from aurum_quantum import JobEnvelope, bell_circuit
+from aurum_quantum.circuits import evaluate_bell_counts
 
 
 def test_bell_state_exact_reference() -> None:
@@ -30,3 +31,10 @@ def test_job_envelope_is_secret_free() -> None:
     assert "token" not in data
     assert "api_key" not in data
     assert data["qpu_approved"] is False
+
+
+def test_bell_hardware_noise_gate() -> None:
+    metrics = evaluate_bell_counts({"00": 143, "11": 110, "01": 1, "10": 2})
+    assert metrics["total_shots"] == 256
+    assert metrics["correlated_shots"] == 253
+    assert metrics["bell_correlation_pass"] is True

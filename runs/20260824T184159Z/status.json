@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-08-24T18:43:14.656218+00:00",
+  "checked_at": "2026-08-24T18:46:13.575306+00:00",
   "run_id": "20260824T184159Z",
   "usage": {
-    "usage_consumed_seconds": 0,
-    "usage_remaining_seconds": 600,
+    "usage_consumed_seconds": 2,
+    "usage_remaining_seconds": 598,
     "usage_limit_seconds": 600,
     "usage_limit_reached": false,
     "usage_period": {
-      "start_time": "2026-07-27T18:43:15.375Z",
-      "end_time": "2026-08-24T18:43:15.375Z"
+      "start_time": "2026-07-27T18:46:14.440Z",
+      "end_time": "2026-08-24T18:46:14.440Z"
     }
   },
   "jobs": [
@@ -21,7 +21,22 @@
     {
       "backend": "ibm_kingston",
       "job_id": "da6911msidac73adrg10",
-      "status": "QUEUED"
+      "status": "DONE",
+      "counts": {
+        "11": 110,
+        "00": 143,
+        "10": 2,
+        "01": 1
+      },
+      "total_shots": 256,
+      "correlated_shots": 253,
+      "bell_correlation_rate": 0.98828125,
+      "minimum_correlation_rate": 0.9,
+      "bell_correlation_pass": true,
+      "unexpected_outcomes": [
+        "01",
+        "10"
+      ]
     },
     {
       "backend": "ibm_marrakesh",

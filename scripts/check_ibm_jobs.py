@@ -5,6 +5,7 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
+from aurum_quantum.circuits import evaluate_bell_counts
 from aurum_quantum.ibm_runtime import result_counts, safe_usage, service
 
 
@@ -29,14 +30,8 @@ def main() -> int:
         }
         if job.done() and "DONE" in status.upper():
             counts = result_counts(job)
-            unexpected = sorted(set(counts) - {"00", "11"})
-            check.update(
-                {
-                    "counts": counts,
-                    "unexpected_outcomes": unexpected,
-                    "bell_correlation_pass": not unexpected,
-                }
-            )
+            check["counts"] = counts
+            check.update(evaluate_bell_counts(counts))
         checks.append(check)
         print(json.dumps(check, indent=2))
 
@@ -57,4 +52,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
