@@ -12,8 +12,9 @@ to quantum hardware at all.
 - Google Quantum Engine: dedicated Cloud project prepared; external sponsor or
   program approval is still required.
 - Amazon Braket, Quantinuum, Azure Quantum, IonQ, Rigetti, QuEra, and Pasqal:
-  adapter and access work is tracked in the setup report; no credentials are
-  stored in this repository.
+  live access and human approval gates are tracked in
+  [`docs/provider-access-status.md`](docs/provider-access-status.md); no
+  credentials are stored in this repository.
 
 ## Safety model
 
@@ -67,4 +68,3 @@ jobs later with:
 QPU queue time can be much longer than execution time. A submitted job is not
 treated as scientific evidence until its result passes the Bell correlation
 check and is compared with the exact local reference.
-
