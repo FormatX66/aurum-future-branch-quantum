@@ -1,0 +1,423 @@
+{
+  "analysis": {
+    "aurum_seed_build": {
+      "artifact_hashes": {
+        "pi": "ab2d26af7432ea445a5cb8907c076d1f0b7f6e6342fa0b3de272115ded289706",
+        "x86": "c89bcb7d16a50633545cfbb69dc3055f9ec7a2c9d1055664758437412eb5723e"
+      },
+      "authority_commit": "eddca0cc220f6e56274fc1d18e816a95d0bdf729",
+      "build_source_commit": "66fc7e1f9fc730d933e5fb2ff3b5ec1abb003a16",
+      "build_state": "READY_TO_FLASH",
+      "combined_fingerprint": "6d5dbe622fdabbdde97b9ab6ce4fdb4c9195a42ff2bb2286146ae495c673cd5a",
+      "deterministic_seed": 177617059,
+      "future_branch_seed_sha256": "1bc3b50f9507523ce3b151d26ad858cbe6963af55852d2dd10c5935abbee2136",
+      "gates": {
+        "combined_hash_reverification": "passed",
+        "guardian_forced_rollback": "pending",
+        "physical_boot": "pending",
+        "pi_build": "passed",
+        "pi_static_recovery_payload": "passed",
+        "published_artifacts": "passed",
+        "x86_bios_boot_smoke": "passed",
+        "x86_boot_proof_marker": "passed",
+        "x86_build": "passed",
+        "x86_uefi_boot_smoke": "passed"
+      },
+      "manifest_sha256": "9a08c7f3ae6537edfb7d8e2ca6e6c9d62405cf1db9dab75981081bbf85b0de3e",
+      "next_gate": "physical-flash-and-boot-proof",
+      "source_repository": "https://github.com/FormatX66/BoxBrain",
+      "unresolved_gates": [
+        "guardian_forced_rollback",
+        "physical_boot"
+      ]
+    },
+    "branch_state_sha256": "aaf5695c760677521ef148912a89a3a0343145312c292ebd27993f0f27658948",
+    "calibration_sha256": "60875843bfc38b4509823078d4deb24442d3042e668abb8ee2a657fe84a6b54a",
+    "failure": {
+      "events": 11,
+      "exact": 4,
+      "high_failure": true,
+      "high_failure_threshold": 0.5,
+      "miss": 3,
+      "partial": 4,
+      "strict_failure_rate": 0.6363636363636364
+    },
+    "future_branch_model": {
+      "calibration_schema": "aurum-future-branch-calibration-v2",
+      "current_program": "Aurum Tiny Seed remains verified READY_TO_FLASH from source 66fc7e1f9fc730d933e5fb2ff3b5ec1abb003a16 with canonical x86 SHA-256 c89bcb7d16a50633545cfbb69dc3055f9ec7a2c9d1055664758437412eb5723e, but Future Branch is now a mandatory pre-execution gate. Before asking for Tiny Seed media or destructive write authority, Aurum must first complete the safe already-authorized Hopper recovery-path probe and checkpoint-first remote repair branch. No fresh terminal aurum.hopper.recovery-path-probe.v2 receipt is currently present, so that missing system evidence blocks a Tiny Seed human assignment. A direct-UEFI fallback carrier has separately passed protected Germ, raw-image/layout, checksum, and OVMF removable-media boot gates and was published experimentally on draft PR #76; it remains isolated and noncanonical until physical evidence justifies a carrier pivot.",
+      "schema": "aurum-future-branch-state-v10"
+    },
+    "qpu_eligible": true,
+    "qpu_scope": "branch-ranking-and-preparation-only",
+    "ranked_machine_paths": [
+      {
+        "boundary_flags": {
+          "credential_boundary": true,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": false,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "feedback": "I had that path warm already.",
+        "linearity": 0.75,
+        "lookahead_depth": 4,
+        "model_probability_from_rank": 0.8888888888888888,
+        "name": "hopper-preexecution-recovery-pass-resolves",
+        "next": "If authorized remote repair completes, re-read Hopper health and suppress stale Tiny Seed handoff. If the fresh terminal receipt proves the remote path unavailable or failed, release only the separately verified smallest manual boundary.",
+        "prepared": [
+          "current Hopper/BoxBrain route evidence",
+          "self-hosted elevated Windows runner",
+          "fresh SSH host-key scan",
+          "existing SSH authorization only",
+          "dirty-state checkpoint",
+          "aurum_sync_recovery.py",
+          "aurum_runtime_update.py apply",
+          "terminal v2 recovery receipt"
+        ],
+        "priority": 3.011765,
+        "probability": 0.8888888888888888,
+        "qpu_amplitude_weight": 0.2999608187935933,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": true,
+        "upstream_rank": 1
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": true,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 3,
+        "model_probability_from_rank": 0.6666666666666666,
+        "name": "terminal-unrepaired-pass-releases-current-tinyseed-boundary",
+        "next": "only then request explicit one-shot authority for the exact current release and exact current USB",
+        "prepared": [
+          "current release source and x86 hash",
+          "fresh USB rediscovery",
+          "candidate model/size/serial identity",
+          "protected-media registry",
+          "guarded flasher",
+          "dry-run preflight",
+          "live identity reproof",
+          "full raw readback"
+        ],
+        "priority": 2.021053,
+        "probability": 0.6666666666666666,
+        "qpu_amplitude_weight": 0.20128951385823537,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": true,
+        "upstream_rank": 3
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": false,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "prepare-now",
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 3,
+        "model_probability_from_rank": 0.7777777777777778,
+        "name": "preexecution-receipt-missing-or-stale",
+        "next": "refresh the system-side Hopper recovery pass; do not ask for media or write authority",
+        "prepared": [
+          "fail-closed Action Ownership v1.9 gate",
+          "receipt freshness limit",
+          "no human-action inference from missing evidence"
+        ],
+        "priority": 1.438025,
+        "probability": 0.7777777777777778,
+        "qpu_amplitude_weight": 0.14322204967706878,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": false,
+        "upstream_rank": 2
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": true,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.4444444444444444,
+        "name": "x86-physical-flash-readback-passes-after-explicit-authority",
+        "next": "physical Hopper boot and Tiny Seed ready/boot-proof evidence",
+        "prepared": [
+          "verified x86 artifact checksum",
+          "current release provenance binding",
+          "unique USB identity targeting",
+          "dry-run preflight",
+          "system-disk refusal",
+          "identity recheck immediately before write",
+          "full raw readback hash",
+          "boot-proof collection"
+        ],
+        "priority": 1.219048,
+        "probability": 0.4444444444444444,
+        "qpu_amplitude_weight": 0.12141273845359526,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": true,
+        "upstream_rank": 5
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": false,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "prepare-now",
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.5555555555555556,
+        "name": "media-identity-or-release-changes-before-authorized-write",
+        "next": "invalidate authorization/preflight as needed and return to read-only discovery without writing",
+        "prepared": [
+          "fail-closed provenance and live-identity checks",
+          "read-only rediscovery",
+          "zero stale-candidate reuse"
+        ],
+        "priority": 0.924444,
+        "probability": 0.5555555555555556,
+        "qpu_amplitude_weight": 0.09207125362331543,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": false,
+        "upstream_rank": 4
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.3333333333333333,
+        "name": "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "next": "promote toward bounded physical comparison only if the observed failure is carrier-specific or expected cost favors the fallback; never call virtual proof physical proof",
+        "prepared": [
+          "isolated direct-UEFI GPT/FAT ESP image",
+          "EFI/BOOT/BOOTX64.EFI",
+          "protected Germ tests",
+          "raw-image checksum/layout proof",
+          "OVMF removable-media boot proof",
+          "experimental published artifact"
+        ],
+        "priority": 0.775758,
+        "probability": 0.3333333333333333,
+        "qpu_amplitude_weight": 0.07726266985162533,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": true,
+        "upstream_rank": 6
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.2222222222222222,
+        "name": "healthy-regrow-arms-trial",
+        "next": "reboot trial only at the physical boundary; promote only on fresh health proof, otherwise roll back automatically",
+        "prepared": [
+          "Gen0 slot A/LKG preservation",
+          "inactive slot B regrow",
+          "boot proof",
+          "selftest and critical-service gates",
+          "Guardian quarantine/rollback"
+        ],
+        "priority": 0.463768,
+        "probability": 0.2222222222222222,
+        "qpu_amplitude_weight": 0.04618960277786188,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": true,
+        "upstream_rank": 7
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "feedback": "That came from outside my leading branches, so I'm recalculating around it.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.1111111111111111,
+        "name": "physical-success-unlocks-universal-carrier-and-arm64-canaries",
+        "next": "prove x86 formal boot/recovery and Pi physical boundaries before promoting broader experimental capabilities",
+        "prepared": [
+          "universal-carrier architecture",
+          "Pi artifact and static proof",
+          "StateWeave independent experiment",
+          "adaptive-kernel independent experiment"
+        ],
+        "priority": 0.186667,
+        "probability": 0.1111111111111111,
+        "qpu_amplitude_weight": 0.018591352964704645,
+        "qpu_role": "rank-preparation-only",
+        "real_boundary": true,
+        "upstream_rank": 8
+      }
+    ],
+    "schema": "aurum-future-branch-qpu-analysis-v1",
+    "speculative_feasibility": {
+      "decision": "pre-run",
+      "failure_information_component": 2.4297520661157024,
+      "failure_probability": 0.6363636363636364,
+      "gross_value": 3.1570247933884295,
+      "net_value": 2.8570247933884296,
+      "success_component": 0.7272727272727273,
+      "success_probability": 0.36363636363636365
+    }
+  },
+  "circuit": {
+    "basis_map": {
+      "000": {
+        "disposition": "wait-boundary",
+        "path": "hopper-preexecution-recovery-pass-resolves",
+        "real_boundary": true,
+        "weight": 0.2999608187935933
+      },
+      "001": {
+        "disposition": "wait-boundary",
+        "path": "terminal-unrepaired-pass-releases-current-tinyseed-boundary",
+        "real_boundary": true,
+        "weight": 0.20128951385823537
+      },
+      "010": {
+        "disposition": "prepare-now",
+        "path": "preexecution-receipt-missing-or-stale",
+        "real_boundary": false,
+        "weight": 0.14322204967706878
+      },
+      "011": {
+        "disposition": "wait-boundary",
+        "path": "x86-physical-flash-readback-passes-after-explicit-authority",
+        "real_boundary": true,
+        "weight": 0.12141273845359526
+      },
+      "100": {
+        "disposition": "prepare-now",
+        "path": "media-identity-or-release-changes-before-authorized-write",
+        "real_boundary": false,
+        "weight": 0.09207125362331543
+      },
+      "101": {
+        "disposition": "wait-boundary",
+        "path": "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "real_boundary": true,
+        "weight": 0.07726266985162533
+      },
+      "110": {
+        "disposition": "wait-boundary",
+        "path": "healthy-regrow-arms-trial",
+        "real_boundary": true,
+        "weight": 0.04618960277786188
+      },
+      "111": {
+        "disposition": "wait-boundary",
+        "path": "physical-success-unlocks-universal-carrier-and-arm64-canaries",
+        "real_boundary": true,
+        "weight": 0.018591352964704645
+      }
+    },
+    "interpretation": "sample ranked preparation paths; never execute physical effects",
+    "padding_states": [],
+    "paths": 8,
+    "qubits": 3
+  },
+  "created_at": "2026-08-24T20:22:55.362386+00:00",
+  "schema": "aurum-future-branch-qpu-candidate-v1",
+  "submission": {
+    "automatic_backend_candidates": [
+      {
+        "name": "ibm_kingston",
+        "pending_jobs": 135,
+        "qubits": 156
+      },
+      {
+        "name": "ibm_fez",
+        "pending_jobs": 9573,
+        "qubits": 156
+      },
+      {
+        "name": "ibm_marrakesh",
+        "pending_jobs": 12014,
+        "qubits": 156
+      }
+    ],
+    "backend_operational": true,
+    "backend_pending_jobs_at_submit": 135,
+    "envelope": {
+      "backend": "ibm_kingston",
+      "formulation": "ranked-branch-amplitude-sampling",
+      "problem_class": "ranked-machine-path-preparation",
+      "provider": "ibm_quantum",
+      "qpu_approved": true,
+      "shots": 256,
+      "workload_id": "aurum-future-branch-high-failure-v1"
+    },
+    "initial_status": "QUEUED",
+    "job_id": "da6agamsidac73adt97g",
+    "logical_qubits": 3,
+    "transpiled_depth": 28,
+    "transpiled_two_qubit_ops": 7,
+    "usage_after_submit": {
+      "usage_consumed_seconds": 4,
+      "usage_limit_reached": false,
+      "usage_limit_seconds": 600,
+      "usage_period": {
+        "end_time": "2026-08-24T20:23:06.618Z",
+        "start_time": "2026-07-27T20:23:06.618Z"
+      },
+      "usage_remaining_seconds": 596
+    },
+    "usage_before": {
+      "usage_consumed_seconds": 4,
+      "usage_limit_reached": false,
+      "usage_limit_seconds": 600,
+      "usage_period": {
+        "end_time": "2026-08-24T20:23:00.912Z",
+        "start_time": "2026-07-27T20:23:00.912Z"
+      },
+      "usage_remaining_seconds": 596
+    }
+  }
+}

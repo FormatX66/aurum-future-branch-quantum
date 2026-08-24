@@ -22,8 +22,24 @@ recorded as evidence. Unknown seed schemas are refused instead of guessed.
 
 Every provider run publishes JSON evidence and a readable GitHub summary for
 30 days. The schedule uses credential-free Cirq and Microsoft QDK simulators.
-Live QPU submission remains separately gated because a recurring workflow must
-not create unbounded cloud charges.
+The same schedule now runs the canonical Future Branch model against its live
+branch state and calibration. It creates a QPU candidate only when the strict
+partial-or-miss rate is at least 50%. Live submission remains separately gated
+because a recurring workflow must not create unbounded cloud charges.
+
+## High-failure Future Branch router
+
+The router imports the actual `FutureBranch` priority and speculative
+feasibility models from the current BoxBrain `main` branch. It scores the
+current `likely_machine_outcomes`, converts the normalized model priorities
+into a small amplitude-sampling circuit, and maps hardware samples back to the
+named Aurum machine paths.
+
+The QPU's role is deliberately narrow: rank and prepare paths. A sampled path
+never grants authority to flash media, boot hardware, use credentials, make a
+destructive write, or cross any other real-world boundary. Those lanes remain
+held for their existing proof or human authorization, while reversible
+preparation can continue.
 
 ## Current live access
 
@@ -40,6 +56,8 @@ not create unbounded cloud charges.
 
 - Secrets are read at runtime from an external file or environment variable.
 - Hardware submission requires the literal `--confirm-qpu` flag.
+- Future Branch hardware routing requires a measured partial-or-miss rate of at
+  least 50% and a positive speculative-feasibility decision.
 - Smoke jobs are capped at 1,024 shots.
 - IBM usage is checked before submission and a reached quota blocks the run.
 - One small, reproducible Bell-state circuit is submitted per selected QPU.
@@ -118,3 +136,26 @@ jobs later with:
 QPU queue time can be much longer than execution time. A submitted job is not
 treated as scientific evidence until its result passes the Bell correlation
 check and is compared with the exact local reference.
+
+## Route a high-failure Aurum branch field
+
+Create the candidate manifest without touching hardware:
+
+```powershell
+$aurumRoot = "C:\path\to\BoxBrain"
+$seedCommit = git -C $aurumRoot rev-parse HEAD
+.\.venv\Scripts\python.exe scripts\run_future_branch_qpu.py `
+  --branch-state "$aurumRoot\Projects\Aurum\future-branches.json" `
+  --calibration "$aurumRoot\Projects\Aurum\future-branch-calibration.json" `
+  --experiments-dir "$aurumRoot\Projects\Aurum\Experiments" `
+  --aurum-build-manifest "$aurumRoot\Projects\Aurum\Release\latest-tinyseed-handoff.json" `
+  --future-branch-seed "$aurumRoot\Prompts\FutureBranchSeed.txt" `
+  --seed-source-commit $seedCommit `
+  --output evidence\future-branch.json `
+  --summary evidence\future-branch.md
+```
+
+Add `--confirm-qpu --shots 256` only for a separately authorized IBM hardware
+run. If `--backend` is omitted, the tool selects the operational processor with
+the shortest queue. The output contains hashes, branch weights, usage, backend,
+and job ID, but never the API key.

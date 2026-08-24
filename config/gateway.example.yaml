@@ -38,6 +38,17 @@ gateway:
     live_qpu_submission:
       automatic: false
       explicit_spending_approval_required: true
+    high_failure_router:
+      enabled: true
+      strict_failure_classes:
+        - partial
+        - miss
+      escalation_threshold: 0.50
+      formulation: ranked-branch-amplitude-sampling
+      max_machine_paths: 8
+      max_shots: 256
+      qpu_scope: branch-ranking-and-preparation-only
+      may_authorize_physical_or_irreversible_effects: false
   continuation:
     human_boundary_scope: lane_only
     continue_independent_lanes: true
@@ -45,7 +56,9 @@ gateway:
     continue_external_observation: true
     ask_human_only_when_no_machine_route_remains: true
   qpu_execution:
-    enabled: false
+    enabled: true
+    high_failure_paths_only: true
+    automatic_scheduled_submission: false
     explicit_confirmation_required: true
     max_shots_per_smoke_job: 1024
   evidence:
@@ -103,7 +116,8 @@ providers:
       api_key_json_field: apikey
       service_crn_env: IBM_QUANTUM_CRN
       auto_discover_single_instance: true
-    qpu_enabled: false
+    qpu_enabled: true
+    route: manually_confirmed_high_failure_probe
 
   google_quantum_engine:
     account_reported_ready: true

@@ -7,6 +7,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from qiskit import QuantumCircuit
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
 
@@ -148,8 +149,78 @@ def submit_bell_job(
     }
 
 
+def submit_sampling_circuit(
+    runtime: QiskitRuntimeService,
+    *,
+    backend_name: str,
+    circuit: QuantumCircuit,
+    shots: int,
+    confirmed: bool,
+    workload_id: str,
+    problem_class: str,
+    formulation: str,
+) -> dict[str, Any]:
+    """Submit one bounded sampling circuit after the same live-QPU safeguards."""
+    if not confirmed:
+        raise RuntimeError("Hardware submission requires explicit confirmation.")
+    if shots < 1 or shots > MAX_SMOKE_SHOTS:
+        raise ValueError(f"shots must be between 1 and {MAX_SMOKE_SHOTS}")
+
+    usage = safe_usage(runtime)
+    if usage["usage_limit_reached"]:
+        raise RuntimeError("IBM usage limit is already reached.")
+    remaining = usage.get("usage_remaining_seconds")
+    if remaining is not None and remaining <= 0:
+        raise RuntimeError("IBM reports no QPU time remaining.")
+
+    backend = runtime.backend(backend_name)
+    status = backend.status()
+    if not status.operational:
+        raise RuntimeError(f"{backend_name} is not operational: {status.status_msg}")
+    if circuit.num_qubits > backend.num_qubits:
+        raise RuntimeError(
+            f"{backend_name} has {backend.num_qubits} qubits; "
+            f"the circuit needs {circuit.num_qubits}."
+        )
+
+    pass_manager = generate_preset_pass_manager(
+        backend=backend,
+        optimization_level=3,
+    )
+    isa_circuit = pass_manager.run(circuit)
+    sampler = SamplerV2(mode=backend)
+    job = sampler.run([isa_circuit], shots=shots)
+
+    envelope = JobEnvelope(
+        workload_id=workload_id,
+        problem_class=problem_class,
+        formulation=formulation,
+        provider="ibm_quantum",
+        backend=backend_name,
+        shots=shots,
+        qpu_approved=True,
+    )
+    return {
+        "envelope": envelope.to_dict(),
+        "job_id": job.job_id(),
+        "initial_status": str(job.status()),
+        "backend_operational": status.operational,
+        "backend_pending_jobs_at_submit": status.pending_jobs,
+        "logical_qubits": circuit.num_qubits,
+        "transpiled_depth": isa_circuit.depth(),
+        "transpiled_two_qubit_ops": sum(
+            count
+            for instruction, count in isa_circuit.count_ops().items()
+            if instruction in {"cx", "cz", "ecr"}
+        ),
+    }
+
+
 def result_counts(job: Any) -> dict[str, int]:
     result = job.result()
     pub_result = result[0]
-    return dict(pub_result.data.meas.get_counts())
-
+    for register_name in pub_result.data.keys():
+        register = getattr(pub_result.data, register_name)
+        if hasattr(register, "get_counts"):
+            return dict(register.get_counts())
+    raise RuntimeError("IBM result contains no classical register counts.")

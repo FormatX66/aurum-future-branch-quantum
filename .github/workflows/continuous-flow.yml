@@ -67,3 +67,52 @@ jobs:
           path: evidence/${{ matrix.provider }}/
           if-no-files-found: warn
           retention-days: 30
+
+  future-branch-qpu-candidate:
+    name: high-failure-qpu-router
+    needs: active-provider-sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Checkout canonical Aurum Future Branch model
+        uses: actions/checkout@v7
+        with:
+          repository: FormatX66/BoxBrain
+          ref: main
+          path: aurum-seed-source
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install QPU router
+        run: python -m pip install -e .
+      - name: Score the live Future Branch field
+        shell: bash
+        run: |
+          seed_commit="$(git -C aurum-seed-source rev-parse HEAD)"
+          python scripts/run_future_branch_qpu.py \
+            --branch-state "aurum-seed-source/Projects/Aurum/future-branches.json" \
+            --calibration "aurum-seed-source/Projects/Aurum/future-branch-calibration.json" \
+            --experiments-dir "aurum-seed-source/Projects/Aurum/Experiments" \
+            --aurum-build-manifest "aurum-seed-source/Projects/Aurum/Release/latest-tinyseed-handoff.json" \
+            --future-branch-seed "aurum-seed-source/Prompts/FutureBranchSeed.txt" \
+            --seed-source-commit "$seed_commit" \
+            --high-failure-threshold 0.50 \
+            --output "evidence/future-branch/qpu-candidate.json" \
+            --summary "evidence/future-branch/summary.md"
+      - name: Publish router summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "evidence/future-branch/summary.md" ]]; then
+            cat "evidence/future-branch/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Retain QPU candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: future-branch-qpu-candidate-${{ github.run_id }}
+          path: evidence/future-branch/
+          if-no-files-found: warn
+          retention-days: 30

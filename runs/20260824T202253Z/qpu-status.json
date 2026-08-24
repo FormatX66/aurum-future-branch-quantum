@@ -1,0 +1,35 @@
+{
+  "schema": "aurum-future-branch-qpu-result-v1",
+  "checked_at": "2026-08-24T20:24:57.756781+00:00",
+  "backend": "ibm_kingston",
+  "job_id": "da6agamsidac73adt97g",
+  "status": "DONE",
+  "usage": {
+    "usage_consumed_seconds": 6,
+    "usage_remaining_seconds": 594,
+    "usage_limit_seconds": 600,
+    "usage_limit_reached": false,
+    "usage_period": {
+      "start_time": "2026-07-27T20:24:58.558Z",
+      "end_time": "2026-08-24T20:24:58.558Z"
+    }
+  },
+  "counts": {
+    "100": 14,
+    "000": 80,
+    "010": 35,
+    "001": 64,
+    "101": 23,
+    "110": 8,
+    "011": 27,
+    "111": 5
+  },
+  "evaluation": {
+    "shots": 256,
+    "total_variation_distance": 0.07477064453184135,
+    "padding_shots": 0,
+    "winning_state": "000",
+    "winning_path": "hopper-preexecution-recovery-pass-resolves",
+    "distribution_usable": true
+  }
+}

@@ -1,6 +1,6 @@
 # Provider access status
 
-Status: 2026-08-24 15:51 America/New_York
+Status: 2026-08-24 16:25 America/New_York
 
 This document records access state without credentials. A provider can be
 configured before it is enabled; hardware execution stays disabled until the
@@ -8,7 +8,7 @@ account, pricing, and job are explicitly approved.
 
 | Access path | State | Next gate |
 |---|---|---|
-| IBM Quantum | Live Open Plan; Fez and Kingston smoke tests passed; Marrakesh queued | Poll the existing Marrakesh job; do not resubmit |
+| IBM Quantum | Live Open Plan; Fez and Kingston smoke tests passed; high-failure Future Branch probe completed on Kingston | Retain the result; poll only the existing Marrakesh job; do not resubmit |
 | Amazon Braket | Braket console open at AWS sign-in | AWS account/root or IAM sign-in; then budgets, S3 results location, and QPU allowlist |
 | Quantinuum | Q-Net and 48-question Guppy/H2 application prefilled; two-page proposal prepared | User facts, Q-Net conduct acknowledgement, proposal attachment, and explicit submissions by 2026-09-07 |
 | Azure Quantum | Account reported working by Bruce; Microsoft QDK local stack active | GitHub workload identity is not configured; live jobs remain off |
@@ -23,7 +23,12 @@ account, pricing, and job are explicitly approved.
 - `ibm_kingston`: 253/256 correlated Bell outcomes, 98.83%, pass.
 - `ibm_fez`: 249/256 correlated Bell outcomes, 97.27%, pass.
 - `ibm_marrakesh`: submitted once and queued.
-- IBM Open Plan usage after the completed jobs: 4 of 600 seconds.
+- `ibm_kingston` Future Branch: job `da6agamsidac73adt97g`, 256 shots,
+  eight current Aurum machine paths, completed. All shots mapped to declared
+  paths; total-variation distance was 0.0748; the sampled winner was
+  `hopper-preexecution-recovery-pass-resolves` with 80 shots.
+- IBM Open Plan usage after the completed jobs: 6 of 600 seconds.
 
-No paid provider account, subscription, workspace, API key, or additional QPU
-job was created during access preparation.
+No paid provider account, subscription, workspace, or API key was created. The
+new Future Branch job uses the existing IBM Open Plan and did not require a
+charge acceptance.
