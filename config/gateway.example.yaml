@@ -1,0 +1,30 @@
+version: 1
+
+gateway:
+  default_execution: local_reference
+  qpu_execution:
+    enabled: false
+    explicit_confirmation_required: true
+    max_shots_per_smoke_job: 1024
+  evidence:
+    require_local_reference: true
+    require_submission_manifest: true
+    require_backend_and_job_id: true
+
+providers:
+  ibm_quantum:
+    control_plane_verified: true
+    auth:
+      api_key_file_env: IQP_API_KEY_FILE
+      api_key_json_field: apikey
+      service_crn_env: IBM_QUANTUM_CRN
+      auto_discover_single_instance: true
+    qpu_enabled: false
+
+  google_quantum_engine:
+    cloud_project_configured: true
+    project_env: GOOGLE_CLOUD_PROJECT
+    approved_access_required: true
+    api_visible_to_project: false
+    qpu_enabled: false
+
