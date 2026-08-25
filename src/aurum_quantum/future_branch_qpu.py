@@ -313,6 +313,37 @@ def evaluate_branch_counts(
     path_distribution.sort(
         key=lambda item: (-item["shots"], -item["expected_weight"], item["path"])
     )
+    expected_order = [
+        item["path"]
+        for item in sorted(
+            path_distribution,
+            key=lambda item: (-item["expected_weight"], item["path"]),
+        )
+    ]
+    observed_order = [item["path"] for item in path_distribution]
+    expected_positions = {path: index for index, path in enumerate(expected_order)}
+    observed_positions = {path: index for index, path in enumerate(observed_order)}
+    rank_count = len(expected_order)
+    rank_distance_squared = sum(
+        (expected_positions[path] - observed_positions[path]) ** 2
+        for path in expected_order
+    )
+    spearman_rank_correlation = (
+        1.0
+        if rank_count == 1
+        else 1 - (6 * rank_distance_squared) / (rank_count * (rank_count**2 - 1))
+    )
+    selected_expected_mass = sum(
+        item["expected_weight"] for item in path_distribution if item["selected_for_execution"]
+    )
+    selected_observed_mass = sum(
+        item["observed_probability"]
+        for item in path_distribution
+        if item["selected_for_execution"]
+    )
+    maximum_absolute_weight_delta = max(
+        abs(item["weight_delta"]) for item in path_distribution
+    )
     winning_path = basis_map.get(winning_state, {}).get("path")
     winning_path_selected = bool(
         basis_map.get(winning_state, {}).get("selected_for_execution", True)
@@ -328,12 +359,29 @@ def evaluate_branch_counts(
         "execution_selection_agreement": winning_path_selected,
         "distribution_usable": distribution_usable,
         "path_distribution": path_distribution,
+        "rank_agreement": {
+            "expected_path_order": expected_order,
+            "observed_path_order": observed_order,
+            "spearman_rank_correlation": spearman_rank_correlation,
+            "top_path_agreement": expected_order[0] == observed_order[0],
+        },
+        "selected_execution_mass": {
+            "expected": selected_expected_mass,
+            "observed": selected_observed_mass,
+            "delta": selected_observed_mass - selected_expected_mass,
+        },
+        "maximum_absolute_weight_delta": maximum_absolute_weight_delta,
         "learning": {
             "full_field_weighted": len(basis_map) > 1,
             "execution_gate_changed": False,
+            "full_rank_agreement": spearman_rank_correlation == 1.0,
             "recommendation": (
                 "retain-top-probability-execution-selection"
-                if distribution_usable and winning_path_selected
+                if (
+                    distribution_usable
+                    and winning_path_selected
+                    and expected_order[0] == observed_order[0]
+                )
                 else "review-model-qpu-divergence-before-execution"
             ),
         },

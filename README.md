@@ -49,6 +49,12 @@ the top-probability execution selection agree, the gate remains unchanged. A
 usable disagreement pauses promotion for model review; it never promotes a
 pruned path or weakens a real-world boundary automatically.
 
+Completed QPU results record the observed distribution, total-variation
+distance, expected-versus-observed path order, Spearman rank agreement,
+selected execution-mass drift, and the largest per-path weight error. These
+metrics decide whether to retain the top-probability gate or require a model
+review before any promotion.
+
 Every continuous run writes a version-controlled record under
 `experiment-logs/` and a compact `experiment-logs/index.jsonl` entry. Records
 include GitHub run identity, hypotheses, probability/confidence, hashed

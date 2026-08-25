@@ -68,8 +68,25 @@ def test_branch_counts_are_mapped_back_to_preparation_paths() -> None:
     assert evaluation["total_variation_distance"] == pytest.approx(0.0)
     assert evaluation["distribution_usable"] is True
     assert evaluation["learning"]["full_field_weighted"] is True
+    assert evaluation["learning"]["full_rank_agreement"] is True
     assert evaluation["learning"]["recommendation"] == "retain-top-probability-execution-selection"
     assert evaluation["path_distribution"][0]["observed_probability"] == pytest.approx(0.5)
+    assert evaluation["rank_agreement"]["spearman_rank_correlation"] == pytest.approx(1.0)
+    assert evaluation["rank_agreement"]["top_path_agreement"] is True
+    assert evaluation["selected_execution_mass"]["delta"] == pytest.approx(0.0)
+    assert evaluation["maximum_absolute_weight_delta"] == pytest.approx(0.0)
+
+
+def test_qpu_divergence_requires_review_before_execution() -> None:
+    _, reference = build_branch_sampling_circuit(_analysis())
+    evaluation = evaluate_branch_counts(
+        {"00": 20, "01": 60, "10": 20}, reference
+    )
+
+    assert evaluation["winning_path"] == "hold"
+    assert evaluation["execution_selection_agreement"] is False
+    assert evaluation["rank_agreement"]["top_path_agreement"] is False
+    assert evaluation["learning"]["recommendation"] == "review-model-qpu-divergence-before-execution"
 
 
 def test_ineligible_field_refuses_circuit() -> None:
