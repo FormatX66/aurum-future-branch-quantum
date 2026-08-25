@@ -1,0 +1,46 @@
+{
+  "candidate": "runs/aurum-seed-failure-5210edd/future-branch-qpu.json",
+  "created_at": "2026-08-25T14:33:40.868677+00:00",
+  "hypothesis": "Corrupt provenance or anomalous QPU winners must fail closed without changing the top-5% execution gate.",
+  "passed": true,
+  "probes": [
+    {
+      "expected": "seed loader refuses the manifest",
+      "id": "corrupted-seed-artifact-hash",
+      "injection": "artifacts.pi.sha256=corrupted",
+      "observed_error": "artifacts.pi.sha256 must be a 64-character SHA-256 value",
+      "passed": true,
+      "physical_or_destructive_effect_executed": false
+    },
+    {
+      "execution_gate_changed": false,
+      "execution_selection_agreement": false,
+      "expected": "review is required and the execution gate remains unchanged",
+      "id": "pruned-branch-wins-all-shots",
+      "injection": {
+        "001": 256
+      },
+      "passed": true,
+      "physical_or_destructive_effect_executed": false,
+      "recommendation": "review-model-qpu-divergence-before-execution",
+      "winning_path": "x86-physical-flash-readback-passes-after-explicit-authority"
+    },
+    {
+      "distribution_usable": false,
+      "execution_gate_changed": false,
+      "expected": "result is unusable and fails closed without a selected path",
+      "id": "undeclared-state-wins-all-shots",
+      "injection": {
+        "1111": 256
+      },
+      "passed": true,
+      "physical_or_destructive_effect_executed": false,
+      "recommendation": "review-model-qpu-divergence-before-execution",
+      "winning_path": null,
+      "winning_path_selected_for_execution": false,
+      "winning_state_declared": false
+    }
+  ],
+  "schema": "aurum-future-branch-failure-probes-v1",
+  "seed_source_commit": "5210eddcf70c40ee4ef148a229eb512004e9670c"
+}

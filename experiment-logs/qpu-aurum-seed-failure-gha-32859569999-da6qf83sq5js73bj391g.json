@@ -1,0 +1,182 @@
+{
+  "schema": "aurum-future-branch-experiment-log-v1",
+  "experiment_id": "qpu-aurum-seed-failure-gha-32859569999-da6qf83sq5js73bj391g",
+  "recorded_at": "2026-08-25T14:34:09.0736947Z",
+  "run": {
+    "seed_repository": "FormatX66/BoxBrain",
+    "seed_workflow": "Aurum Read-Only USB Discovery",
+    "seed_run_id": "32859569999",
+    "seed_run_conclusion": "success",
+    "seed_authority_commit": "5210eddcf70c40ee4ef148a229eb512004e9670c",
+    "runner_repository": "FormatX66/aurum-future-branch-quantum",
+    "runner_commit": "fcb4cae316aded4634b1e70a7dda779650d998af",
+    "runner_test_run_id": "32860161350",
+    "runner_test_conclusion": "success",
+    "qpu_provider": "ibm_quantum",
+    "qpu_backend": "ibm_kingston",
+    "qpu_job_id": "da6qf83sq5js73bj391g"
+  },
+  "aurum_seed": {
+    "state": "READY_TO_FLASH",
+    "build_source_commit": "e845c02b984b8a40de42b58b1e059f03366804c3",
+    "next_gate": "physical-flash-and-boot-proof",
+    "unresolved_gates": [
+      "guardian_forced_rollback",
+      "physical_boot"
+    ],
+    "manifest_sha256": "edd0f361c7ef3ef6ba0a0b8f3efcf5aba05118a88acba5cb14df2f334cde99a0",
+    "future_branch_seed_sha256": "0f81ffb1d63871e06df7408873829dd0c05d461e10c761e147d1871ce59aa5b3",
+    "combined_fingerprint": "704316671e61bd5f55c53735b4ac6dcf5d519e79e2d3991e1f94fbc857d8b7f9"
+  },
+  "hypotheses": [
+    {
+      "id": "aurum-seed-full-field-qpu-weighting",
+      "hypothesis": "The canonical READY_TO_FLASH Aurum seed produces a usable full-field hardware distribution before the top-5% execution gate.",
+      "confidence": 0.9567044656680404,
+      "confidence_basis": "One minus the observed total-variation distance.",
+      "evidence": [
+        "declared_path_shots=256/256",
+        "unexpected_shots=0",
+        "total_variation_distance=0.04329553433195961",
+        "maximum_absolute_weight_delta=0.03356597764506064"
+      ],
+      "outcome": "supported"
+    },
+    {
+      "id": "aurum-seed-qpu-execution-gate-agreement",
+      "hypothesis": "The hardware winner agrees with the independently computed top-5% execution selection.",
+      "confidence": 1.0,
+      "confidence_basis": "Observed Spearman rank correlation across all eight paths.",
+      "evidence": [
+        "spearman_rank_correlation=1.0",
+        "top_path_agreement=true",
+        "winning_path_selected_for_execution=true"
+      ],
+      "outcome": "supported"
+    },
+    {
+      "id": "aurum-seed-failure-injection-fails-closed",
+      "hypothesis": "Corrupt seed provenance, a pruned hardware winner, or an undeclared hardware winner cannot promote a path or change the execution gate.",
+      "confidence": 1.0,
+      "confidence_basis": "All three deterministic failure probes passed; confidence is limited to the injected cases.",
+      "evidence": [
+        "corrupted-seed-artifact-hash=refused",
+        "pruned-branch-winner=review-with-gate-unchanged",
+        "undeclared-state-winner=unusable-with-no-selected-path",
+        "failure_probes_passed=3/3"
+      ],
+      "outcome": "supported"
+    }
+  ],
+  "selection": {
+    "qpu_weighting_stage": "before-top-probability-execution-pruning",
+    "qpu_population_size": 8,
+    "qpu_qubits": 3,
+    "top_probability_fraction": 0.05,
+    "execution_selected_count": 1,
+    "execution_pruned_count": 7,
+    "selected_path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+    "selected_model_probability": 0.8888888888888888,
+    "selected_qpu_expected_weight": 0.27575347764506064,
+    "selected_qpu_observed_weight": 0.2421875
+  },
+  "evidence": {
+    "candidate_manifest": {
+      "path": "runs/aurum-seed-failure-5210edd/future-branch-qpu.json",
+      "sha256": "9532b783a54786ebe01d4ba464fcc3e178718e724610dde327a3087245b57fd2"
+    },
+    "qpu_result": {
+      "path": "runs/aurum-seed-failure-5210edd/qpu-status.json",
+      "sha256": "9b578e9e8a56947e2f8d916cfab22ffcbe5045504c6ca40dd935017eadebb8bc"
+    },
+    "failure_probes": {
+      "path": "runs/aurum-seed-failure-5210edd/failure-probes.json",
+      "sha256": "f33eb47e05746a81340921173be60e26602b9b9c67b3c76afccad628a3056161"
+    },
+    "branch_state_sha256": "a4b21006ac7aac6e93078c2908a3d4370d4685b9f5dee04fb1e265e1e0e804cb",
+    "calibration_sha256": "67f5b824a4244457d8057e4eb8b3245f2b7e894a904190f76a96c26022f735b2",
+    "qpu": {
+      "submitted_at": "2026-08-25T14:32:53.463950+00:00",
+      "first_observed_completion_at": "2026-08-25T14:33:21.144768+00:00",
+      "elapsed_seconds": 27.680818,
+      "logical_qubits": 3,
+      "transpiled_depth": 25,
+      "transpiled_two_qubit_ops": 5,
+      "shots": 256,
+      "counts": {
+        "000": 62,
+        "001": 46,
+        "010": 43,
+        "011": 38,
+        "100": 29,
+        "101": 17,
+        "110": 16,
+        "111": 5
+      },
+      "unexpected_shots": 0,
+      "total_variation_distance": 0.04329553433195961,
+      "spearman_rank_correlation": 1.0,
+      "selected_execution_mass_expected": 0.27575347764506064,
+      "selected_execution_mass_observed": 0.2421875,
+      "selected_execution_mass_delta": -0.03356597764506064,
+      "maximum_absolute_weight_delta": 0.03356597764506064,
+      "usage_seconds_before": 12,
+      "usage_seconds_after": 14,
+      "usage_seconds_added": 2
+    }
+  },
+  "failures": [
+    {
+      "id": "corrupted-seed-artifact-hash",
+      "injected": true,
+      "observed": "seed loader refused artifacts.pi.sha256",
+      "fail_closed": true
+    },
+    {
+      "id": "pruned-branch-wins-all-shots",
+      "injected": true,
+      "observed": "review required and execution gate unchanged",
+      "fail_closed": true
+    },
+    {
+      "id": "undeclared-state-wins-all-shots",
+      "injected": true,
+      "observed": "result unusable, no winning path, and execution gate unchanged",
+      "fail_closed": true
+    }
+  ],
+  "outcomes": {
+    "overall": "success-live-agreement-and-failure-probes",
+    "qpu_execution": "success",
+    "full_field_weighted": true,
+    "full_rank_agreement": true,
+    "top_path_agreement": true,
+    "distribution_usable": true,
+    "failure_probes_passed": 3,
+    "failure_probes_total": 3,
+    "execution_gate_changed": false,
+    "recommendation": "retain-top-probability-execution-selection",
+    "qpu_helped": "independent rank validation and failure-safety evidence; no authority or execution change",
+    "selected_branch": {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "status": "held-at-explicit-authorization-boundary",
+      "physical_or_destructive_effect_executed": false
+    }
+  },
+  "next_branch_updates": [
+    {
+      "rule": "Treat any winning state absent from the declared basis map as unusable and fail closed with no selected path."
+    },
+    {
+      "rule": "If a pruned path wins, require model review; never promote it or change the top-5% execution gate automatically."
+    },
+    {
+      "rule": "Accumulate changed-seed hardware runs before recalibrating probabilities; do not replay an identical state without a new hypothesis."
+    },
+    {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "status": "held-at-explicit-authorization-boundary",
+      "next": "Require fresh one-shot authorization and matching live proof before any write; otherwise return to read-only discovery."
+    }
+  ]
+}
