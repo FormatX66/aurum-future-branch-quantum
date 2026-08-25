@@ -72,10 +72,10 @@ def select_top_probability_paths(
         raise ValueError("selected Future Branch paths have no positive priority")
     for item in selected:
         item["selected_for_execution"] = True
-        item["qpu_amplitude_weight"] = max(float(item["priority"]), 0.0) / selected_priority
+        item["execution_weight"] = max(float(item["priority"]), 0.0) / selected_priority
     for item in pruned:
         item["selected_for_execution"] = False
-        item["qpu_amplitude_weight"] = 0.0
+        item["execution_weight"] = 0.0
     return selected, pruned
 
 
@@ -174,7 +174,8 @@ def analyze_future_branch_field(
     for item, priority in zip(ranked, positive_priorities, strict=True):
         item.update(upstream[item["name"]])
         item["population_amplitude_weight"] = priority / total_priority
-        item["qpu_role"] = "rank-preparation-only"
+        item["qpu_amplitude_weight"] = priority / total_priority
+        item["qpu_role"] = "full-field-weighting-before-execution-pruning"
     selected, pruned = select_top_probability_paths(
         ranked, fraction=top_probability_fraction
     )
@@ -220,7 +221,7 @@ def analyze_future_branch_field(
             **information_value,
         },
         "qpu_eligible": qpu_eligible,
-        "qpu_scope": "branch-ranking-and-preparation-only",
+        "qpu_scope": "full-field-weighting-before-top-probability-execution-pruning",
         "selection": {
             "rule": "highest-model-probability-ceiling",
             "top_probability_fraction": top_probability_fraction,
@@ -238,7 +239,7 @@ def analyze_future_branch_field(
 def build_branch_sampling_circuit(analysis: dict[str, Any]) -> tuple[QuantumCircuit, dict[str, Any]]:
     if not analysis.get("qpu_eligible"):
         raise RuntimeError("Future Branch field is not eligible for QPU escalation")
-    paths = analysis.get("selected_machine_paths", analysis["ranked_machine_paths"])
+    paths = analysis["ranked_machine_paths"]
     qubits = max(1, math.ceil(math.log2(len(paths))))
     dimensions = 2**qubits
     amplitudes = [0.0] * dimensions
@@ -249,6 +250,9 @@ def build_branch_sampling_circuit(analysis: dict[str, Any]) -> tuple[QuantumCirc
         basis_map[format(index, f"0{qubits}b")] = {
             "path": path["name"],
             "weight": weight,
+            "model_probability": path.get("probability"),
+            "selected_for_execution": path.get("selected_for_execution", True),
+            "execution_weight": path.get("execution_weight", weight),
             "real_boundary": path["real_boundary"],
             "disposition": path["disposition"],
         }
@@ -263,7 +267,14 @@ def build_branch_sampling_circuit(analysis: dict[str, Any]) -> tuple[QuantumCirc
         "padding_states": [
             format(index, f"0{qubits}b") for index in range(len(paths), dimensions)
         ],
-        "interpretation": "sample ranked preparation paths; never execute physical effects",
+        "weighting_stage": "before-top-probability-execution-pruning",
+        "execution_selected_paths": [
+            path["name"] for path in paths if path.get("selected_for_execution", True)
+        ],
+        "interpretation": (
+            "weight the full ranked field, then execute only the separately gated "
+            "top-probability paths; never execute physical effects"
+        ),
     }
     return circuit, reference
 
@@ -283,13 +294,49 @@ def evaluate_branch_counts(
         abs(observed.get(state, 0.0) - expected.get(state, 0.0)) for state in states
     )
     winning_state = max(counts, key=counts.get)
+    path_distribution = []
+    for state, item in basis_map.items():
+        count = int(counts.get(state, 0))
+        observed_probability = count / total
+        path_distribution.append(
+            {
+                "state": state,
+                "path": item["path"],
+                "shots": count,
+                "observed_probability": observed_probability,
+                "expected_weight": float(item["weight"]),
+                "weight_delta": observed_probability - float(item["weight"]),
+                "model_probability": item.get("model_probability"),
+                "selected_for_execution": item.get("selected_for_execution", True),
+            }
+        )
+    path_distribution.sort(
+        key=lambda item: (-item["shots"], -item["expected_weight"], item["path"])
+    )
+    winning_path = basis_map.get(winning_state, {}).get("path")
+    winning_path_selected = bool(
+        basis_map.get(winning_state, {}).get("selected_for_execution", True)
+    )
+    distribution_usable = total_variation_distance <= 0.50
     return {
         "shots": total,
         "total_variation_distance": total_variation_distance,
         "padding_shots": sum(counts.get(state, 0) for state in padding),
         "winning_state": winning_state,
-        "winning_path": basis_map.get(winning_state, {}).get("path"),
-        "distribution_usable": total_variation_distance <= 0.50,
+        "winning_path": winning_path,
+        "winning_path_selected_for_execution": winning_path_selected,
+        "execution_selection_agreement": winning_path_selected,
+        "distribution_usable": distribution_usable,
+        "path_distribution": path_distribution,
+        "learning": {
+            "full_field_weighted": len(basis_map) > 1,
+            "execution_gate_changed": False,
+            "recommendation": (
+                "retain-top-probability-execution-selection"
+                if distribution_usable and winning_path_selected
+                else "review-model-qpu-divergence-before-execution"
+            ),
+        },
     }
 
 
@@ -302,18 +349,19 @@ def render_qpu_analysis_summary(analysis: dict[str, Any]) -> str:
         f"- QPU threshold: `{failure['high_failure_threshold']:.1%}`",
         f"- QPU eligible: **{analysis['qpu_eligible']}**",
         f"- Model decision: `{analysis['speculative_feasibility']['decision']}`",
-        "- Scope: branch ranking and preparation only",
+        "- QPU weighting: full ranked field before execution pruning",
         f"- Probability field retained: **{analysis['selection']['top_probability_fraction']:.1%}**",
         f"- Selected paths: `{analysis['selection']['selected_count']} / {analysis['selection']['population_size']}`",
         f"- Pruned paths: `{analysis['selection']['pruned_count']}`",
         "",
-        "| Rank | Machine path | Probability | Execution weight | Selected | Boundary |",
-        "|---:|---|---:|---:|---|---|",
+        "| Rank | Machine path | Probability | QPU weight | Execution weight | Selected | Boundary |",
+        "|---:|---|---:|---:|---:|---|---|",
     ]
     for rank, path in enumerate(analysis["ranked_machine_paths"], start=1):
         lines.append(
             f"| {rank} | `{path['name']}` | {path['probability']:.4f} | "
-            f"{path['qpu_amplitude_weight']:.4f} | {path['selected_for_execution']} | "
+            f"{path['qpu_amplitude_weight']:.4f} | {path['execution_weight']:.4f} | "
+            f"{path['selected_for_execution']} | "
             f"{path['real_boundary']} |"
         )
     return "\n".join(lines) + "\n"

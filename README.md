@@ -31,16 +31,23 @@ because a recurring workflow must not create unbounded cloud charges.
 
 The router imports the actual `FutureBranch` priority and speculative
 feasibility models from the current BoxBrain `main` branch. It scores the
-current `likely_machine_outcomes`, retains only the ceiling of the highest 5%
-by model probability, prunes every other path from execution, converts the
-selected priority mass into a small amplitude-sampling circuit, and maps any
-samples back to the named Aurum machine path.
+current `likely_machine_outcomes` and converts the full normalized priority
+field into an amplitude-sampling circuit. QPU evidence therefore distinguishes
+multiple live paths before the execution gate retains only the ceiling of the
+highest 5% by model probability and prunes every other path from execution.
+Samples are mapped back to named Aurum paths and compared with the separately
+gated execution selection.
 
 The QPU's role is deliberately narrow: rank and prepare paths. A sampled path
 never grants authority to flash media, boot hardware, use credentials, make a
 destructive write, or cross any other real-world boundary. Those lanes remain
 held for their existing proof or human authorization, while reversible
 preparation can continue.
+
+Full-field QPU weighting is evidence, not authority. If the sampled winner and
+the top-probability execution selection agree, the gate remains unchanged. A
+usable disagreement pauses promotion for model review; it never promotes a
+pruned path or weakens a real-world boundary automatically.
 
 Every continuous run writes a version-controlled record under
 `experiment-logs/` and a compact `experiment-logs/index.jsonl` entry. Records

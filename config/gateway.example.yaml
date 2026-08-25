@@ -43,6 +43,9 @@ gateway:
       top_probability_fraction: 0.05
       selection_rule: highest-model-probability-ceiling
       prune_unselected_paths: true
+      qpu_weighting_stage: before-execution-pruning
+      qpu_weights_full_ranked_field: true
+      disagreement_action: review-before-execution
       strict_failure_classes:
         - partial
         - miss
@@ -50,7 +53,7 @@ gateway:
       formulation: ranked-branch-amplitude-sampling
       max_machine_paths: 8
       max_shots: 256
-      qpu_scope: branch-ranking-and-preparation-only
+      qpu_scope: full-field-weighting-before-top-probability-execution-pruning
       may_authorize_physical_or_irreversible_effects: false
   continuation:
     human_boundary_scope: lane_only
