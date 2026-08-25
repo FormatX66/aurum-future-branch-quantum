@@ -167,13 +167,35 @@ jobs:
             --router-outcome "${{ steps.route.outcome }}" \
             "${resume_args[@]}" \
             --log-dir experiment-logs
-      - name: Persist durable experiment log
+      - name: Materialize next-user interaction frontier
+        if: always()
+        shell: bash
+        run: |
+          provider_args=()
+          while IFS= read -r -d '' path; do
+            provider_args+=(--provider-evidence "$path")
+          done < <(find evidence/provider-artifacts -type f -name results.json -print0 2>/dev/null || true)
+          candidate_args=()
+          if [[ -f evidence/future-branch/qpu-candidate.json ]]; then
+            candidate_args+=(--candidate evidence/future-branch/qpu-candidate.json)
+          fi
+          python scripts/write_interaction_frontier.py \
+            "${candidate_args[@]}" \
+            "${provider_args[@]}" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --workflow-name "$GITHUB_WORKFLOW" \
+            --workflow-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --runner-commit "$GITHUB_SHA" \
+            --router-outcome "${{ steps.route.outcome }}" \
+            --output-dir interaction-frontier
+      - name: Persist durable Future Branch state
         if: always()
         shell: bash
         run: |
           git config user.name "future-branch-experiment-bot"
           git config user.email "future-branch-experiment-bot@users.noreply.github.com"
-          git add experiment-logs
+          git add experiment-logs interaction-frontier
           if git diff --cached --quiet; then
             exit 0
           fi
