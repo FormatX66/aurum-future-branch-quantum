@@ -40,6 +40,9 @@ gateway:
       explicit_spending_approval_required: true
     high_failure_router:
       enabled: true
+      top_probability_fraction: 0.05
+      selection_rule: highest-model-probability-ceiling
+      prune_unselected_paths: true
       strict_failure_classes:
         - partial
         - miss
@@ -65,6 +68,7 @@ gateway:
     require_local_reference: true
     require_submission_manifest: true
     require_backend_and_job_id: true
+    durable_experiment_log: experiment-logs/index.jsonl
 
 providers:
   local_provider_stacks:

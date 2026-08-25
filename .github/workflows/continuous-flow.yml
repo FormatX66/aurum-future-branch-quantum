@@ -4,9 +4,19 @@ on:
   schedule:
     - cron: "17 */4 * * *"
   workflow_dispatch:
+    inputs:
+      resumed_from_run_id:
+        description: "Prior run ID being resumed"
+        required: false
+        type: string
+      recovered_failure:
+        description: "Failure recovered by this run"
+        required: false
+        type: string
 
 permissions:
-  contents: read
+  actions: read
+  contents: write
 
 concurrency:
   group: aurum-continuous-variable-flow
@@ -71,6 +81,7 @@ jobs:
   future-branch-qpu-candidate:
     name: high-failure-qpu-router
     needs: active-provider-sweep
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -88,6 +99,8 @@ jobs:
       - name: Install QPU router
         run: python -m pip install -e .
       - name: Score the live Future Branch field
+        id: route
+        continue-on-error: true
         shell: bash
         run: |
           seed_commit="$(git -C aurum-seed-source rev-parse HEAD)"
@@ -99,8 +112,15 @@ jobs:
             --future-branch-seed "aurum-seed-source/Prompts/FutureBranchSeed.txt" \
             --seed-source-commit "$seed_commit" \
             --high-failure-threshold 0.50 \
+            --top-probability-fraction 0.05 \
             --output "evidence/future-branch/qpu-candidate.json" \
             --summary "evidence/future-branch/summary.md"
+      - name: Download provider evidence
+        continue-on-error: true
+        uses: actions/download-artifact@v7
+        with:
+          pattern: continuous-flow-*-${{ github.run_id }}
+          path: evidence/provider-artifacts
       - name: Publish router summary
         if: always()
         shell: bash
@@ -116,3 +136,50 @@ jobs:
           path: evidence/future-branch/
           if-no-files-found: warn
           retention-days: 30
+      - name: Write durable Future Branch experiment log
+        if: always()
+        shell: bash
+        env:
+          RESUMED_FROM_RUN_ID: ${{ inputs.resumed_from_run_id }}
+          RECOVERED_FAILURE: ${{ inputs.recovered_failure }}
+        run: |
+          provider_args=()
+          while IFS= read -r -d '' path; do
+            provider_args+=(--provider-evidence "$path")
+          done < <(find evidence/provider-artifacts -type f -name results.json -print0 2>/dev/null || true)
+          resume_args=()
+          if [[ -n "$RESUMED_FROM_RUN_ID" ]]; then
+            resume_args+=(--resumed-from-run-id "$RESUMED_FROM_RUN_ID")
+          fi
+          if [[ -n "$RECOVERED_FAILURE" ]]; then
+            resume_args+=(--recovered-failure "$RECOVERED_FAILURE")
+          fi
+          python scripts/write_experiment_log.py \
+            --candidate evidence/future-branch/qpu-candidate.json \
+            "${provider_args[@]}" \
+            --expected-provider google \
+            --expected-provider microsoft \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --workflow-name "$GITHUB_WORKFLOW" \
+            --workflow-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --runner-commit "$GITHUB_SHA" \
+            --router-outcome "${{ steps.route.outcome }}" \
+            "${resume_args[@]}" \
+            --log-dir experiment-logs
+      - name: Persist durable experiment log
+        if: always()
+        shell: bash
+        run: |
+          git config user.name "future-branch-experiment-bot"
+          git config user.email "future-branch-experiment-bot@users.noreply.github.com"
+          git add experiment-logs
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Log Future Branch experiment $GITHUB_RUN_ID"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: Enforce experiment outcome
+        if: steps.route.outcome != 'success' || needs.active-provider-sweep.result != 'success'
+        shell: bash
+        run: exit 1

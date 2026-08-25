@@ -9,6 +9,7 @@ from typing import Any
 from aurum_quantum.aurum_seed import load_aurum_seed_build
 from aurum_quantum.future_branch_qpu import (
     DEFAULT_HIGH_FAILURE_THRESHOLD,
+    DEFAULT_TOP_PROBABILITY_FRACTION,
     analyze_future_branch_field,
     build_branch_sampling_circuit,
     render_qpu_analysis_summary,
@@ -47,6 +48,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--future-branch-seed", type=Path, required=True)
     parser.add_argument("--seed-source-commit", required=True)
     parser.add_argument("--high-failure-threshold", type=float, default=DEFAULT_HIGH_FAILURE_THRESHOLD)
+    parser.add_argument(
+        "--top-probability-fraction",
+        type=float,
+        default=DEFAULT_TOP_PROBABILITY_FRACTION,
+    )
     parser.add_argument("--backend")
     parser.add_argument("--shots", type=int, default=256)
     parser.add_argument("--confirm-qpu", action="store_true")
@@ -68,6 +74,7 @@ def main() -> int:
         experiments_dir=args.experiments_dir,
         aurum_seed=aurum_seed,
         high_failure_threshold=args.high_failure_threshold,
+        top_probability_fraction=args.top_probability_fraction,
     )
     circuit = None
     reference = None
@@ -132,6 +139,8 @@ def main() -> int:
             {
                 "qpu_eligible": analysis["qpu_eligible"],
                 "strict_failure_rate": analysis["failure"]["strict_failure_rate"],
+                "selected_paths": analysis["selection"]["selected_count"],
+                "pruned_paths": analysis["selection"]["pruned_count"],
                 "job_id": (document["submission"] or {}).get("job_id"),
             }
         )

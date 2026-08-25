@@ -31,15 +31,23 @@ because a recurring workflow must not create unbounded cloud charges.
 
 The router imports the actual `FutureBranch` priority and speculative
 feasibility models from the current BoxBrain `main` branch. It scores the
-current `likely_machine_outcomes`, converts the normalized model priorities
-into a small amplitude-sampling circuit, and maps hardware samples back to the
-named Aurum machine paths.
+current `likely_machine_outcomes`, retains only the ceiling of the highest 5%
+by model probability, prunes every other path from execution, converts the
+selected priority mass into a small amplitude-sampling circuit, and maps any
+samples back to the named Aurum machine path.
 
 The QPU's role is deliberately narrow: rank and prepare paths. A sampled path
 never grants authority to flash media, boot hardware, use credentials, make a
 destructive write, or cross any other real-world boundary. Those lanes remain
 held for their existing proof or human authorization, while reversible
 preparation can continue.
+
+Every continuous run writes a version-controlled record under
+`experiment-logs/` and a compact `experiment-logs/index.jsonl` entry. Records
+include GitHub run identity, hypotheses, probability/confidence, hashed
+evidence, failures, outcomes, selected and pruned branches, and the next branch
+update. Provider artifacts remain available for 30 days; the summarized record
+and evidence hashes remain durable in Git.
 
 ## Current live access
 
@@ -151,6 +159,7 @@ $seedCommit = git -C $aurumRoot rev-parse HEAD
   --aurum-build-manifest "$aurumRoot\Projects\Aurum\Release\latest-tinyseed-handoff.json" `
   --future-branch-seed "$aurumRoot\Prompts\FutureBranchSeed.txt" `
   --seed-source-commit $seedCommit `
+  --top-probability-fraction 0.05 `
   --output evidence\future-branch.json `
   --summary evidence\future-branch.md
 ```

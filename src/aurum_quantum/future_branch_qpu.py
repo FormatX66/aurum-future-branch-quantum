@@ -15,9 +15,13 @@ from qiskit.circuit.library import StatePreparation
 from .aurum_seed import AurumSeedBuild
 
 
-BRANCH_SCHEMA = "aurum-future-branch-state-v10"
+BRANCH_SCHEMAS = {
+    "aurum-future-branch-state-v10",
+    "aurum-future-branch-state-v11",
+}
 CALIBRATION_SCHEMA = "aurum-future-branch-calibration-v2"
 DEFAULT_HIGH_FAILURE_THRESHOLD = 0.50
+DEFAULT_TOP_PROBABILITY_FRACTION = 0.05
 
 
 def _load_module(path: Path, label: str) -> ModuleType:
@@ -31,12 +35,48 @@ def _load_module(path: Path, label: str) -> ModuleType:
     return module
 
 
-def _load_json(path: Path, *, schema: str) -> tuple[dict[str, Any], str]:
+def _load_json(
+    path: Path, *, schema: str | set[str]
+) -> tuple[dict[str, Any], str]:
     raw = path.read_bytes()
     value = json.loads(raw)
-    if not isinstance(value, dict) or value.get("schema") != schema:
+    if not isinstance(value, dict):
+        raise ValueError(f"Unsupported JSON document in {path}")
+    allowed = {schema} if isinstance(schema, str) else schema
+    if value.get("schema") not in allowed:
         raise ValueError(f"Unsupported schema in {path}: {value.get('schema')!r}")
     return value, hashlib.sha256(raw).hexdigest()
+
+
+def select_top_probability_paths(
+    paths: list[dict[str, Any]], *, fraction: float = DEFAULT_TOP_PROBABILITY_FRACTION
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Keep the ceiling of the highest-probability fraction and prune the rest."""
+    if not 0 < fraction <= 1:
+        raise ValueError("top probability fraction must be greater than 0 and at most 1")
+    if not paths:
+        raise ValueError("at least one Future Branch path is required")
+    selected_count = max(1, math.ceil(len(paths) * fraction))
+    ordered = sorted(
+        paths,
+        key=lambda item: (
+            -float(item["probability"]),
+            -float(item["priority"]),
+            str(item["name"]),
+        ),
+    )
+    selected = ordered[:selected_count]
+    pruned = ordered[selected_count:]
+    selected_priority = sum(max(float(item["priority"]), 0.0) for item in selected)
+    if selected_priority <= 0:
+        raise ValueError("selected Future Branch paths have no positive priority")
+    for item in selected:
+        item["selected_for_execution"] = True
+        item["qpu_amplitude_weight"] = max(float(item["priority"]), 0.0) / selected_priority
+    for item in pruned:
+        item["selected_for_execution"] = False
+        item["qpu_amplitude_weight"] = 0.0
+    return selected, pruned
 
 
 def _boundary_flags(text: str) -> dict[str, bool]:
@@ -63,10 +103,11 @@ def analyze_future_branch_field(
     experiments_dir: Path,
     aurum_seed: AurumSeedBuild,
     high_failure_threshold: float = DEFAULT_HIGH_FAILURE_THRESHOLD,
+    top_probability_fraction: float = DEFAULT_TOP_PROBABILITY_FRACTION,
 ) -> dict[str, Any]:
     if not 0 <= high_failure_threshold <= 1:
         raise ValueError("high_failure_threshold must be between 0 and 1")
-    branch_state, branch_sha = _load_json(branch_state_path, schema=BRANCH_SCHEMA)
+    branch_state, branch_sha = _load_json(branch_state_path, schema=BRANCH_SCHEMAS)
     calibration, calibration_sha = _load_json(
         calibration_path, schema=CALIBRATION_SCHEMA
     )
@@ -132,8 +173,11 @@ def analyze_future_branch_field(
         raise ValueError("Future Branch model returned no positive branch priority")
     for item, priority in zip(ranked, positive_priorities, strict=True):
         item.update(upstream[item["name"]])
-        item["qpu_amplitude_weight"] = priority / total_priority
+        item["population_amplitude_weight"] = priority / total_priority
         item["qpu_role"] = "rank-preparation-only"
+    selected, pruned = select_top_probability_paths(
+        ranked, fraction=top_probability_fraction
+    )
 
     probe = feasibility.FeasibilityProbe(
         name="aurum-future-branch-qpu-ranking",
@@ -177,15 +221,25 @@ def analyze_future_branch_field(
         },
         "qpu_eligible": qpu_eligible,
         "qpu_scope": "branch-ranking-and-preparation-only",
+        "selection": {
+            "rule": "highest-model-probability-ceiling",
+            "top_probability_fraction": top_probability_fraction,
+            "population_size": len(ranked),
+            "selected_count": len(selected),
+            "pruned_count": len(pruned),
+            "probability_cutoff": min(float(item["probability"]) for item in selected),
+        },
         "ranked_machine_paths": ranked,
+        "selected_machine_paths": selected,
+        "pruned_machine_paths": pruned,
     }
 
 
 def build_branch_sampling_circuit(analysis: dict[str, Any]) -> tuple[QuantumCircuit, dict[str, Any]]:
     if not analysis.get("qpu_eligible"):
         raise RuntimeError("Future Branch field is not eligible for QPU escalation")
-    paths = analysis["ranked_machine_paths"]
-    qubits = math.ceil(math.log2(len(paths)))
+    paths = analysis.get("selected_machine_paths", analysis["ranked_machine_paths"])
+    qubits = max(1, math.ceil(math.log2(len(paths))))
     dimensions = 2**qubits
     amplitudes = [0.0] * dimensions
     basis_map: dict[str, Any] = {}
@@ -249,13 +303,17 @@ def render_qpu_analysis_summary(analysis: dict[str, Any]) -> str:
         f"- QPU eligible: **{analysis['qpu_eligible']}**",
         f"- Model decision: `{analysis['speculative_feasibility']['decision']}`",
         "- Scope: branch ranking and preparation only",
+        f"- Probability field retained: **{analysis['selection']['top_probability_fraction']:.1%}**",
+        f"- Selected paths: `{analysis['selection']['selected_count']} / {analysis['selection']['population_size']}`",
+        f"- Pruned paths: `{analysis['selection']['pruned_count']}`",
         "",
-        "| Rank | Machine path | Weight | Boundary |",
-        "|---:|---|---:|---|",
+        "| Rank | Machine path | Probability | Execution weight | Selected | Boundary |",
+        "|---:|---|---:|---:|---|---|",
     ]
     for rank, path in enumerate(analysis["ranked_machine_paths"], start=1):
         lines.append(
-            f"| {rank} | `{path['name']}` | {path['qpu_amplitude_weight']:.4f} | "
+            f"| {rank} | `{path['name']}` | {path['probability']:.4f} | "
+            f"{path['qpu_amplitude_weight']:.4f} | {path['selected_for_execution']} | "
             f"{path['real_boundary']} |"
         )
     return "\n".join(lines) + "\n"
