@@ -1,0 +1,84 @@
+{
+  "schema": "aurum-future-branch-interaction-frontier-v1",
+  "recorded_at": "2026-08-25T09:02:05.325661+00:00",
+  "activation": "next-user-interaction",
+  "scheduled_delivery": false,
+  "notification": false,
+  "interaction_branches": [
+    {
+      "name": "status-handoff",
+      "prior_probability": 0.6,
+      "purpose": "Summarize what changed, what is ready, what is blocked, and the proof.",
+      "prepared": true,
+      "delivery": "on-user-interaction-only"
+    },
+    {
+      "name": "what-next",
+      "prior_probability": 0.25,
+      "purpose": "State the highest-value next action and whether it is machine-safe or a real human boundary.",
+      "prepared": true,
+      "delivery": "on-user-interaction-only"
+    },
+    {
+      "name": "proof-check",
+      "prior_probability": 0.15,
+      "purpose": "Answer whether Future Branch actually worked from durable run evidence, not activity alone.",
+      "prepared": true,
+      "delivery": "on-user-interaction-only"
+    }
+  ],
+  "selected_interaction_branch": "status-handoff",
+  "handoff": {
+    "status": "ready",
+    "build_state": "READY_TO_FLASH",
+    "next_gate": "physical-flash-and-boot-proof",
+    "unresolved_gates": [
+      "guardian_forced_rollback",
+      "physical_boot"
+    ],
+    "selected_machine_path": {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "probability": 0.8888888888888888,
+      "disposition": "wait-boundary",
+      "next": "write only if every live proof still matches the one-shot authority; otherwise fail closed and return to read-only discovery",
+      "real_boundary": true
+    },
+    "provider_sweeps": [
+      {
+        "provider": "google",
+        "passed": true,
+        "cases_executed": 9,
+        "failed_cases": []
+      },
+      {
+        "provider": "microsoft",
+        "passed": true,
+        "cases_executed": 9,
+        "failed_cases": []
+      }
+    ],
+    "missing_evidence": [],
+    "proof": {
+      "branch_state_sha256": "bc3ff4823cf601227f4c74115fe7077940e97bf78dfd05bbe1a3c5e94fbd5e5f",
+      "calibration_sha256": "2da1b0fb146ea9f768dfe82d5cf32c22ac482fe89d6d69d589269da779740795",
+      "future_branch_seed_sha256": "7b6422faef3da74c9a5ae9791c29f53369a38ed4b1df3759da3afd70b6e772f5",
+      "combined_fingerprint": "eac904491a1e615995bb1bd7bb8008e06e1977f6537d09e95adc8c5889c416d7",
+      "durable_experiment": "gha-32829621451-attempt-1"
+    },
+    "render_contract": {
+      "use_prepared_packet_first": true,
+      "fetch_only_newer_deltas_when_possible": true,
+      "never_claim_delivery_before_user_interaction": true,
+      "never_promote_unverified_physical_state": true
+    }
+  },
+  "run": {
+    "run_id": "32829621451",
+    "run_attempt": "1",
+    "workflow": "continuous-variable-flow",
+    "workflow_url": "https://github.com/FormatX66/aurum-future-branch-quantum/actions/runs/32829621451",
+    "runner_commit": "ced475f436876eed33e1ea1431b3c31ac8f2c4c7",
+    "router_outcome": "success"
+  },
+  "bootstrap_source": "experiment-logs/gha-32829621451-attempt-1.json"
+}
