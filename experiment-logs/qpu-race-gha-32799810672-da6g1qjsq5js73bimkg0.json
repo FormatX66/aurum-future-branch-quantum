@@ -1,0 +1,124 @@
+{
+  "schema": "aurum-future-branch-experiment-log-v1",
+  "experiment_id": "qpu-race-gha-32799810672-da6g1qjsq5js73bimkg0",
+  "recorded_at": "2026-08-25T02:42:23.1383804Z",
+  "run": {
+    "comparison_repository": "FormatX66/BoxBrain",
+    "comparison_run_id": "32799810672",
+    "comparison_workflow": "Aurum Hopper Live Status",
+    "comparison_url": "https://github.com/FormatX66/BoxBrain/actions/runs/32799810672",
+    "comparison_head_commit": "9ffc2b4563b4f5801c9e1733604cf16615f7055c",
+    "runner_repository": "FormatX66/aurum-future-branch-quantum",
+    "runner_commit": "00e4dfeb1a95ff7498a4fa2056c95521ab4b5b0b",
+    "qpu_provider": "ibm_quantum",
+    "qpu_backend": "ibm_kingston",
+    "qpu_job_id": "da6g1qjsq5js73bimkg0"
+  },
+  "hypotheses": [
+    {
+      "id": "qpu-out-of-band-timing",
+      "hypothesis": "A QPU branch-ranking probe can finish against the exact state of an already-processing workflow before that workflow becomes runnable.",
+      "confidence": 1.0,
+      "confidence_basis": "Observed completion ordering in the controlled race.",
+      "evidence": [
+        "comparison_status_at_submit=queued",
+        "qpu_status_after_46.565273_seconds=DONE",
+        "comparison_status_after_qpu_completion=queued"
+      ],
+      "outcome": "supported"
+    },
+    {
+      "id": "qpu-weighting-decision-advantage",
+      "hypothesis": "QPU sampling improves the top-5% branch choice beyond deterministic pruning for this live field.",
+      "probability": 0.8888888888888888,
+      "confidence_basis": "Canonical Future Branch probability of the sole retained path.",
+      "evidence": [
+        "population_size=8",
+        "selected_count=1",
+        "pruned_count=7",
+        "qpu_counts=0:256",
+        "total_variation_distance=0.0"
+      ],
+      "outcome": "refuted",
+      "reason": "The top-5% gate retained one path, making the post-pruning distribution deterministic before QPU execution."
+    }
+  ],
+  "selection": {
+    "rule": "highest-model-probability-ceiling",
+    "top_probability_fraction": 0.05,
+    "population_size": 8,
+    "selected_count": 1,
+    "pruned_count": 7,
+    "probability_cutoff": 0.8888888888888888,
+    "selected_path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+    "selected_probability": 0.8888888888888888,
+    "selected_execution_weight": 1.0
+  },
+  "evidence": {
+    "candidate_manifest": {
+      "path": "runs/processing-race-32799810672/future-branch-qpu.json",
+      "sha256": "7fdb83ce7644b1cd36c9aef06ae8b2b3c60a18afd7ece7bbab123647e2280085"
+    },
+    "qpu_result": {
+      "path": "runs/processing-race-32799810672/qpu-status.json",
+      "sha256": "855364c235c45f92dac69d4554ca8bec128a6daca2d4f31f86e759ab55a0a338"
+    },
+    "branch_state_sha256": "1faf73a6b714e6653137975c73040f88ee09b231185dd1e2f343d30728ffd71d",
+    "calibration_sha256": "67f5b824a4244457d8057e4eb8b3245f2b7e894a904190f76a96c26022f735b2",
+    "aurum_seed_fingerprint": "576df2c9db4788dc3855e4757484692c353084c322950a21a265ca412e98f00d",
+    "qpu": {
+      "submitted_at": "2026-08-25T02:41:35.018862Z",
+      "completed_check_at": "2026-08-25T02:42:21.584135Z",
+      "elapsed_seconds": 46.565273,
+      "initial_status": "QUEUED",
+      "final_status": "DONE",
+      "pending_jobs_at_submit": 2,
+      "logical_qubits": 1,
+      "transpiled_depth": 1,
+      "transpiled_two_qubit_ops": 0,
+      "shots": 256,
+      "counts": {
+        "0": 256
+      },
+      "padding_shots": 0,
+      "total_variation_distance": 0.0,
+      "distribution_usable": true,
+      "usage_seconds_before": 8,
+      "usage_seconds_after": 10,
+      "usage_seconds_added": 2
+    },
+    "comparison": {
+      "status_at_qpu_submit": "queued",
+      "status_after_qpu_completion": "queued",
+      "updated_at": "2026-08-25T02:01:50Z"
+    }
+  },
+  "failures": [],
+  "outcomes": {
+    "overall": "success-no-decision-advantage",
+    "qpu_execution": "success",
+    "qpu_returned_before_comparison_run": true,
+    "qpu_provided_latency_path": true,
+    "qpu_improved_branch_weighting": false,
+    "selected_branch": {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "probability": 0.8888888888888888,
+      "status": "held-at-real-boundary",
+      "physical_or_destructive_effect_executed": false
+    },
+    "hardware_submission": true
+  },
+  "next_branch_updates": [
+    {
+      "rule": "Use QPU weighting only when top-probability pruning retains at least two materially competitive paths."
+    },
+    {
+      "rule": "Use deterministic selection when the top-5% gate leaves a single path; a QPU sample cannot change that choice."
+    },
+    {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "status": "held-at-real-boundary",
+      "next": "Write only if every live proof still matches fresh one-shot authority; otherwise fail closed and return to read-only discovery."
+    }
+  ]
+}
