@@ -1,0 +1,129 @@
+{
+  "schema": "aurum-future-branch-experiment-log-v1",
+  "experiment_id": "qpu-full-field-learning-gha-32799810672-da6mta46l22c73dmhqig",
+  "recorded_at": "2026-08-25T10:32:22.270633Z",
+  "run": {
+    "comparison_repository": "FormatX66/BoxBrain",
+    "comparison_run_id": "32799810672",
+    "comparison_head_commit": "9ffc2b4563b4f5801c9e1733604cf16615f7055c",
+    "runner_repository": "FormatX66/aurum-future-branch-quantum",
+    "submission_runner_commit": "01008ee1bc691659928469fbfb66192d3d513fbe",
+    "evaluation_runner_commit": "f91b7b985b1ec507dea7f3cb6cf25830c96f248b",
+    "qpu_provider": "ibm_quantum",
+    "qpu_backend": "ibm_kingston",
+    "qpu_job_id": "da6mta46l22c73dmhqig"
+  },
+  "hypotheses": [
+    {
+      "id": "full-field-qpu-weighting",
+      "hypothesis": "Weighting all eight live Future Branch paths before top-5% execution pruning produces a usable empirical distribution.",
+      "confidence": 0.9625567951437058,
+      "confidence_basis": "One minus the observed total-variation distance.",
+      "evidence": [
+        "declared_path_shots=256/256",
+        "padding_shots=0",
+        "total_variation_distance=0.037443204856294154",
+        "maximum_absolute_weight_delta=0.02112152235493936"
+      ],
+      "outcome": "supported"
+    },
+    {
+      "id": "qpu-execution-gate-agreement",
+      "hypothesis": "The full-field QPU ranking agrees with the independently computed top-5% execution selection.",
+      "confidence": 1.0,
+      "confidence_basis": "Observed Spearman rank correlation across all eight paths.",
+      "evidence": [
+        "spearman_rank_correlation=1.0",
+        "top_path_agreement=true",
+        "winning_path_selected_for_execution=true"
+      ],
+      "outcome": "supported"
+    }
+  ],
+  "selection": {
+    "qpu_weighting_stage": "before-top-probability-execution-pruning",
+    "qpu_population_size": 8,
+    "qpu_qubits": 3,
+    "top_probability_fraction": 0.05,
+    "execution_selected_count": 1,
+    "execution_pruned_count": 7,
+    "selected_path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+    "selected_model_probability": 0.8888888888888888,
+    "selected_qpu_expected_weight": 0.27575347764506064,
+    "selected_qpu_observed_weight": 0.296875
+  },
+  "evidence": {
+    "candidate_manifest": {
+      "path": "runs/full-field-learning-32799810672/future-branch-qpu.json",
+      "sha256": "040506acbce3ae599f42e4a87934cfd48c8896ce55cbee6281577876b4921b61"
+    },
+    "qpu_result": {
+      "path": "runs/full-field-learning-32799810672/qpu-status.json",
+      "sha256": "8756710ee89e657825822459b37ab98f4ec7a45c6a6dc3adee67bdddba9d4b23"
+    },
+    "branch_state_sha256": "1faf73a6b714e6653137975c73040f88ee09b231185dd1e2f343d30728ffd71d",
+    "calibration_sha256": "67f5b824a4244457d8057e4eb8b3245f2b7e894a904190f76a96c26022f735b2",
+    "aurum_seed_fingerprint": "576df2c9db4788dc3855e4757484692c353084c322950a21a265ca412e98f00d",
+    "qpu": {
+      "submitted_at": "2026-08-25T10:29:46.715906Z",
+      "first_observed_completion_at": "2026-08-25T10:30:46.090676Z",
+      "elapsed_seconds": 59.37477,
+      "logical_qubits": 3,
+      "transpiled_depth": 25,
+      "transpiled_two_qubit_ops": 5,
+      "shots": 256,
+      "counts": {
+        "000": 76,
+        "001": 42,
+        "010": 41,
+        "011": 37,
+        "100": 28,
+        "101": 17,
+        "110": 9,
+        "111": 6
+      },
+      "padding_shots": 0,
+      "total_variation_distance": 0.037443204856294154,
+      "spearman_rank_correlation": 1.0,
+      "selected_execution_mass_expected": 0.27575347764506064,
+      "selected_execution_mass_observed": 0.296875,
+      "selected_execution_mass_delta": 0.02112152235493936,
+      "maximum_absolute_weight_delta": 0.02112152235493936,
+      "usage_seconds_before": 10,
+      "usage_seconds_after": 12,
+      "usage_seconds_added": 2
+    }
+  },
+  "failures": [],
+  "outcomes": {
+    "overall": "success-full-rank-agreement",
+    "qpu_execution": "success",
+    "full_field_weighted": true,
+    "full_rank_agreement": true,
+    "top_path_agreement": true,
+    "distribution_usable": true,
+    "execution_gate_changed": false,
+    "recommendation": "retain-top-probability-execution-selection",
+    "selected_branch": {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "status": "held-at-real-boundary",
+      "physical_or_destructive_effect_executed": false
+    }
+  },
+  "next_branch_updates": [
+    {
+      "rule": "Continue full-field QPU weighting before the top-5% execution gate when branch state or evidence changes."
+    },
+    {
+      "rule": "If a usable QPU result disagrees on the top path or favors a pruned path, pause promotion and review the model before execution."
+    },
+    {
+      "rule": "Do not recalibrate model probabilities from a single hardware distribution; accumulate independent changed-state results first."
+    },
+    {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "status": "held-at-real-boundary",
+      "next": "Require fresh one-shot authority and matching live proof before any write; otherwise fail closed."
+    }
+  ]
+}

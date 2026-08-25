@@ -1,0 +1,738 @@
+{
+  "analysis": {
+    "aurum_seed_build": {
+      "artifact_hashes": {
+        "pi": "dc619c58b8ac728cfbaca652f83e06421929b60d371f53a242a957fe371560bf",
+        "x86": "5301e757924e74fbb9abef59e94afc0c31034c02e16352f01f71e91e30ca9940"
+      },
+      "authority_commit": "9ffc2b4563b4f5801c9e1733604cf16615f7055c",
+      "build_source_commit": "6f91d25b934ffe48352fa43a865625d2bc2d5d1e",
+      "build_state": "READY_TO_FLASH",
+      "combined_fingerprint": "576df2c9db4788dc3855e4757484692c353084c322950a21a265ca412e98f00d",
+      "deterministic_seed": 170094193,
+      "future_branch_seed_sha256": "cd3cd781bb89997cc6f2c57f194d02218af52db2e2bd8ab06115e27aea2601b2",
+      "gates": {
+        "combined_hash_reverification": "passed",
+        "guardian_forced_rollback": "pending",
+        "physical_boot": "pending",
+        "pi_build": "passed",
+        "pi_static_recovery_payload": "passed",
+        "published_artifacts": "passed",
+        "x86_bios_boot_smoke": "passed",
+        "x86_boot_proof_marker": "passed",
+        "x86_build": "passed",
+        "x86_uefi_boot_smoke": "passed"
+      },
+      "manifest_sha256": "06f22dc20913fb6003c8b9cab64eee0924ab4d0d0ab6f35c379a26316b43916c",
+      "next_gate": "physical-flash-and-boot-proof",
+      "source_repository": "https://github.com/FormatX66/BoxBrain",
+      "unresolved_gates": [
+        "guardian_forced_rollback",
+        "physical_boot"
+      ]
+    },
+    "branch_state_sha256": "1faf73a6b714e6653137975c73040f88ee09b231185dd1e2f343d30728ffd71d",
+    "calibration_sha256": "67f5b824a4244457d8057e4eb8b3245f2b7e894a904190f76a96c26022f735b2",
+    "failure": {
+      "events": 12,
+      "exact": 4,
+      "high_failure": true,
+      "high_failure_threshold": 0.5,
+      "miss": 3,
+      "partial": 5,
+      "strict_failure_rate": 0.6666666666666666
+    },
+    "future_branch_model": {
+      "calibration_schema": "aurum-future-branch-calibration-v2",
+      "current_program": "Aurum Tiny Seed canonical release is READY_TO_FLASH from source b582d70605d93f8be12df7e261336839c260fb1e with x86 SHA-256 1afb8659eda15b2c2acd1b0c4ce70b99fb7a9bd8c0489b8b10be59acfaf9dee4. Physical preflight is READY_FOR_GUARDED_FLASH_PREFLIGHT; preflight_matches_current_release=true, terminal_recovery_receipt=true, terminal_reason=boxbrain-unreachable, manual_handoff_released=true, eligible_usb_count=1, write_authority=false, destructive_action_performed=false, next_gate=explicit-guarded-flash-authorization. Canonical evidence may prepare a branch but never grants destructive authority or physical proof.",
+      "schema": "aurum-future-branch-state-v11"
+    },
+    "pruned_machine_paths": [
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": true,
+          "irreversible_boundary": false,
+          "physical_boundary": false,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 3,
+        "model_probability_from_rank": 0.7777777777777778,
+        "name": "media-identity-release-or-protection-state-changes-before-write",
+        "next": "refuse the write, invalidate stale authority/preflight as needed, and rebuild evidence without destructive action",
+        "population_amplitude_weight": 0.16889900990482948,
+        "prepared": [
+          "fail-closed provenance checks",
+          "read-only rediscovery",
+          "authorization invalidation",
+          "zero stale-candidate reuse"
+        ],
+        "priority": 1.742222,
+        "probability": 0.7777777777777778,
+        "qpu_amplitude_weight": 0.16889900990482948,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 2
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 3,
+        "model_probability_from_rank": 0.6666666666666666,
+        "name": "x86-physical-flash-readback-passes-after-explicit-authority",
+        "next": "physical Hopper boot and Tiny Seed ready/boot-proof evidence",
+        "population_amplitude_weight": 0.17416009624659604,
+        "prepared": [
+          "verified x86 artifact checksum",
+          "exact release provenance",
+          "unique USB targeting",
+          "guarded write",
+          "full raw-device readback hash",
+          "boot-proof collection"
+        ],
+        "priority": 1.796491,
+        "probability": 0.6666666666666666,
+        "qpu_amplitude_weight": 0.17416009624659604,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 3
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.5555555555555556,
+        "name": "guarded-flash-refuses-or-readback-mismatches",
+        "next": "treat refusal as protection success, diagnose the smallest failing gate, and never weaken target-safety or readback verification",
+        "population_amplitude_weight": 0.13787673882253032,
+        "prepared": [
+          "no LKG mutation",
+          "failure receipt",
+          "device identity evidence",
+          "artifact checksum evidence",
+          "readback mismatch diagnostics",
+          "safe retry only after cause is known"
+        ],
+        "priority": 1.422222,
+        "probability": 0.5555555555555556,
+        "qpu_amplitude_weight": 0.13787673882253032,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 4
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.4444444444444444,
+        "name": "physical-boot-success-with-possible-network-or-regrow-defer",
+        "next": "preserve completed boot/install work, repair only the deferred stage, and continue toward healthy inactive-slot regrow",
+        "population_amplitude_weight": 0.10504897156324133,
+        "prepared": [
+          "Tiny Seed ready marker",
+          "boot-proof receipt",
+          "network retry/join",
+          "bridge/LKG preservation",
+          "regrow resume",
+          "mixed-outcome classification"
+        ],
+        "priority": 1.083598,
+        "probability": 0.4444444444444444,
+        "qpu_amplitude_weight": 0.10504897156324133,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 5
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.3333333333333333,
+        "name": "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "next": "promote toward bounded physical comparison only if the observed failure is carrier-specific or expected total cost favors the fallback",
+        "population_amplitude_weight": 0.0752055467820695,
+        "prepared": [
+          "isolated direct-UEFI GPT/FAT ESP image",
+          "EFI/BOOT/BOOTX64.EFI",
+          "protected Germ tests",
+          "raw-image checksum/layout proof",
+          "OVMF removable-media boot proof",
+          "experimental published artifact"
+        ],
+        "priority": 0.775758,
+        "probability": 0.3333333333333333,
+        "qpu_amplitude_weight": 0.0752055467820695,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 6
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.2222222222222222,
+        "name": "healthy-regrow-arms-trial",
+        "next": "reboot trial only at the physical boundary; promote only on fresh health proof, otherwise roll back automatically",
+        "population_amplitude_weight": 0.04495980192279914,
+        "prepared": [
+          "Gen0 slot A/LKG preservation",
+          "inactive slot B regrow",
+          "boot proof",
+          "selftest and critical-service gates",
+          "Guardian quarantine/rollback"
+        ],
+        "priority": 0.463768,
+        "probability": 0.2222222222222222,
+        "qpu_amplitude_weight": 0.04495980192279914,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 7
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That came from outside my leading branches, so I'm recalculating around it.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.1111111111111111,
+        "name": "physical-success-unlocks-universal-carrier-and-arm64-canaries",
+        "next": "prove x86 formal boot/recovery and Pi physical boundaries before promoting broader experimental capabilities",
+        "population_amplitude_weight": 0.018096357112873565,
+        "prepared": [
+          "universal-carrier architecture",
+          "Pi artifact/static proof",
+          "StateWeave independent experiment",
+          "adaptive-kernel independent experiment"
+        ],
+        "priority": 0.186667,
+        "probability": 0.1111111111111111,
+        "qpu_amplitude_weight": 0.018096357112873565,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 8
+      }
+    ],
+    "qpu_eligible": true,
+    "qpu_scope": "full-field-weighting-before-top-probability-execution-pruning",
+    "ranked_machine_paths": [
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 1.0,
+        "feedback": "I had that path warm already.",
+        "linearity": 0.75,
+        "lookahead_depth": 4,
+        "model_probability_from_rank": 0.8888888888888888,
+        "name": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+        "next": "write only if every live proof still matches the one-shot authority; otherwise fail closed and return to read-only discovery",
+        "population_amplitude_weight": 0.27575347764506064,
+        "prepared": [
+          "canonical READY_TO_FLASH source/hash",
+          "fresh USB candidate model/size/serial hash",
+          "protected-media registry",
+          "artifact checksum",
+          "guarded dry-run",
+          "live USB identity re-enumeration",
+          "system/boot-disk refusal"
+        ],
+        "priority": 2.844444,
+        "probability": 0.8888888888888888,
+        "qpu_amplitude_weight": 0.27575347764506064,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": true,
+        "upstream_rank": 1
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 3,
+        "model_probability_from_rank": 0.6666666666666666,
+        "name": "x86-physical-flash-readback-passes-after-explicit-authority",
+        "next": "physical Hopper boot and Tiny Seed ready/boot-proof evidence",
+        "population_amplitude_weight": 0.17416009624659604,
+        "prepared": [
+          "verified x86 artifact checksum",
+          "exact release provenance",
+          "unique USB targeting",
+          "guarded write",
+          "full raw-device readback hash",
+          "boot-proof collection"
+        ],
+        "priority": 1.796491,
+        "probability": 0.6666666666666666,
+        "qpu_amplitude_weight": 0.17416009624659604,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 3
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": true,
+          "irreversible_boundary": false,
+          "physical_boundary": false,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 3,
+        "model_probability_from_rank": 0.7777777777777778,
+        "name": "media-identity-release-or-protection-state-changes-before-write",
+        "next": "refuse the write, invalidate stale authority/preflight as needed, and rebuild evidence without destructive action",
+        "population_amplitude_weight": 0.16889900990482948,
+        "prepared": [
+          "fail-closed provenance checks",
+          "read-only rediscovery",
+          "authorization invalidation",
+          "zero stale-candidate reuse"
+        ],
+        "priority": 1.742222,
+        "probability": 0.7777777777777778,
+        "qpu_amplitude_weight": 0.16889900990482948,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 2
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was one of the directions I was expecting.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.5555555555555556,
+        "name": "guarded-flash-refuses-or-readback-mismatches",
+        "next": "treat refusal as protection success, diagnose the smallest failing gate, and never weaken target-safety or readback verification",
+        "population_amplitude_weight": 0.13787673882253032,
+        "prepared": [
+          "no LKG mutation",
+          "failure receipt",
+          "device identity evidence",
+          "artifact checksum evidence",
+          "readback mismatch diagnostics",
+          "safe retry only after cause is known"
+        ],
+        "priority": 1.422222,
+        "probability": 0.5555555555555556,
+        "qpu_amplitude_weight": 0.13787673882253032,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 4
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.4444444444444444,
+        "name": "physical-boot-success-with-possible-network-or-regrow-defer",
+        "next": "preserve completed boot/install work, repair only the deferred stage, and continue toward healthy inactive-slot regrow",
+        "population_amplitude_weight": 0.10504897156324133,
+        "prepared": [
+          "Tiny Seed ready marker",
+          "boot-proof receipt",
+          "network retry/join",
+          "bridge/LKG preservation",
+          "regrow resume",
+          "mixed-outcome classification"
+        ],
+        "priority": 1.083598,
+        "probability": 0.4444444444444444,
+        "qpu_amplitude_weight": 0.10504897156324133,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 5
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.3333333333333333,
+        "name": "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "next": "promote toward bounded physical comparison only if the observed failure is carrier-specific or expected total cost favors the fallback",
+        "population_amplitude_weight": 0.0752055467820695,
+        "prepared": [
+          "isolated direct-UEFI GPT/FAT ESP image",
+          "EFI/BOOT/BOOTX64.EFI",
+          "protected Germ tests",
+          "raw-image checksum/layout proof",
+          "OVMF removable-media boot proof",
+          "experimental published artifact"
+        ],
+        "priority": 0.775758,
+        "probability": 0.3333333333333333,
+        "qpu_amplitude_weight": 0.0752055467820695,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 6
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That was plausible, but it wasn't one of my leading branches.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.2222222222222222,
+        "name": "healthy-regrow-arms-trial",
+        "next": "reboot trial only at the physical boundary; promote only on fresh health proof, otherwise roll back automatically",
+        "population_amplitude_weight": 0.04495980192279914,
+        "prepared": [
+          "Gen0 slot A/LKG preservation",
+          "inactive slot B regrow",
+          "boot proof",
+          "selftest and critical-service gates",
+          "Guardian quarantine/rollback"
+        ],
+        "priority": 0.463768,
+        "probability": 0.2222222222222222,
+        "qpu_amplitude_weight": 0.04495980192279914,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 7
+      },
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "feedback": "That came from outside my leading branches, so I'm recalculating around it.",
+        "linearity": 0.75,
+        "lookahead_depth": 2,
+        "model_probability_from_rank": 0.1111111111111111,
+        "name": "physical-success-unlocks-universal-carrier-and-arm64-canaries",
+        "next": "prove x86 formal boot/recovery and Pi physical boundaries before promoting broader experimental capabilities",
+        "population_amplitude_weight": 0.018096357112873565,
+        "prepared": [
+          "universal-carrier architecture",
+          "Pi artifact/static proof",
+          "StateWeave independent experiment",
+          "adaptive-kernel independent experiment"
+        ],
+        "priority": 0.186667,
+        "probability": 0.1111111111111111,
+        "qpu_amplitude_weight": 0.018096357112873565,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "upstream_rank": 8
+      }
+    ],
+    "schema": "aurum-future-branch-qpu-analysis-v1",
+    "selected_machine_paths": [
+      {
+        "boundary_flags": {
+          "credential_boundary": false,
+          "destructive_boundary": false,
+          "irreversible_boundary": false,
+          "physical_boundary": true,
+          "preference_boundary": false
+        },
+        "dependencies_satisfied": false,
+        "disposition": "wait-boundary",
+        "execution_weight": 1.0,
+        "feedback": "I had that path warm already.",
+        "linearity": 0.75,
+        "lookahead_depth": 4,
+        "model_probability_from_rank": 0.8888888888888888,
+        "name": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+        "next": "write only if every live proof still matches the one-shot authority; otherwise fail closed and return to read-only discovery",
+        "population_amplitude_weight": 0.27575347764506064,
+        "prepared": [
+          "canonical READY_TO_FLASH source/hash",
+          "fresh USB candidate model/size/serial hash",
+          "protected-media registry",
+          "artifact checksum",
+          "guarded dry-run",
+          "live USB identity re-enumeration",
+          "system/boot-disk refusal"
+        ],
+        "priority": 2.844444,
+        "probability": 0.8888888888888888,
+        "qpu_amplitude_weight": 0.27575347764506064,
+        "qpu_role": "full-field-weighting-before-execution-pruning",
+        "real_boundary": true,
+        "selected_for_execution": true,
+        "upstream_rank": 1
+      }
+    ],
+    "selection": {
+      "population_size": 8,
+      "probability_cutoff": 0.8888888888888888,
+      "pruned_count": 7,
+      "rule": "highest-model-probability-ceiling",
+      "selected_count": 1,
+      "top_probability_fraction": 0.05
+    },
+    "speculative_feasibility": {
+      "decision": "pre-run",
+      "failure_information_component": 2.666666666666667,
+      "failure_probability": 0.6666666666666667,
+      "gross_value": 3.3333333333333335,
+      "net_value": 3.0333333333333337,
+      "success_component": 0.6666666666666666,
+      "success_probability": 0.3333333333333333
+    }
+  },
+  "circuit": {
+    "basis_map": {
+      "000": {
+        "disposition": "wait-boundary",
+        "execution_weight": 1.0,
+        "model_probability": 0.8888888888888888,
+        "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+        "real_boundary": true,
+        "selected_for_execution": true,
+        "weight": 0.27575347764506064
+      },
+      "001": {
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "model_probability": 0.6666666666666666,
+        "path": "x86-physical-flash-readback-passes-after-explicit-authority",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "weight": 0.17416009624659604
+      },
+      "010": {
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "model_probability": 0.7777777777777778,
+        "path": "media-identity-release-or-protection-state-changes-before-write",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "weight": 0.16889900990482948
+      },
+      "011": {
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "model_probability": 0.5555555555555556,
+        "path": "guarded-flash-refuses-or-readback-mismatches",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "weight": 0.13787673882253032
+      },
+      "100": {
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "model_probability": 0.4444444444444444,
+        "path": "physical-boot-success-with-possible-network-or-regrow-defer",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "weight": 0.10504897156324133
+      },
+      "101": {
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "model_probability": 0.3333333333333333,
+        "path": "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "weight": 0.0752055467820695
+      },
+      "110": {
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "model_probability": 0.2222222222222222,
+        "path": "healthy-regrow-arms-trial",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "weight": 0.04495980192279914
+      },
+      "111": {
+        "disposition": "wait-boundary",
+        "execution_weight": 0.0,
+        "model_probability": 0.1111111111111111,
+        "path": "physical-success-unlocks-universal-carrier-and-arm64-canaries",
+        "real_boundary": true,
+        "selected_for_execution": false,
+        "weight": 0.018096357112873565
+      }
+    },
+    "execution_selected_paths": [
+      "fresh-authority-triggers-live-reproof-and-guarded-preflight"
+    ],
+    "interpretation": "weight the full ranked field, then execute only the separately gated top-probability paths; never execute physical effects",
+    "padding_states": [],
+    "paths": 8,
+    "qubits": 3,
+    "weighting_stage": "before-top-probability-execution-pruning"
+  },
+  "created_at": "2026-08-25T10:29:46.715906+00:00",
+  "schema": "aurum-future-branch-qpu-candidate-v1",
+  "submission": {
+    "automatic_backend_candidates": null,
+    "backend_operational": true,
+    "backend_pending_jobs_at_submit": 1,
+    "envelope": {
+      "backend": "ibm_kingston",
+      "formulation": "ranked-branch-amplitude-sampling",
+      "problem_class": "ranked-machine-path-preparation",
+      "provider": "ibm_quantum",
+      "qpu_approved": true,
+      "shots": 256,
+      "workload_id": "aurum-future-branch-high-failure-v1"
+    },
+    "initial_status": "QUEUED",
+    "job_id": "da6mta46l22c73dmhqig",
+    "logical_qubits": 3,
+    "transpiled_depth": 25,
+    "transpiled_two_qubit_ops": 5,
+    "usage_after_submit": {
+      "usage_consumed_seconds": 10,
+      "usage_limit_reached": false,
+      "usage_limit_seconds": 600,
+      "usage_period": {
+        "end_time": "2026-08-25T10:30:01.004Z",
+        "start_time": "2026-07-28T10:30:01.004Z"
+      },
+      "usage_remaining_seconds": 590
+    },
+    "usage_before": {
+      "usage_consumed_seconds": 10,
+      "usage_limit_reached": false,
+      "usage_limit_seconds": 600,
+      "usage_period": {
+        "end_time": "2026-08-25T10:29:55.817Z",
+        "start_time": "2026-07-28T10:29:55.817Z"
+      },
+      "usage_remaining_seconds": 590
+    }
+  }
+}

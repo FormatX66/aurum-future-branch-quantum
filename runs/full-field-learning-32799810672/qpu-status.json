@@ -1,0 +1,155 @@
+{
+  "schema": "aurum-future-branch-qpu-result-v1",
+  "checked_at": "2026-08-25T10:32:22.270633+00:00",
+  "backend": "ibm_kingston",
+  "job_id": "da6mta46l22c73dmhqig",
+  "status": "DONE",
+  "usage": {
+    "usage_consumed_seconds": 12,
+    "usage_remaining_seconds": 588,
+    "usage_limit_seconds": 600,
+    "usage_limit_reached": false,
+    "usage_period": {
+      "start_time": "2026-07-28T10:32:22.737Z",
+      "end_time": "2026-08-25T10:32:22.737Z"
+    }
+  },
+  "counts": {
+    "010": 41,
+    "011": 37,
+    "111": 6,
+    "000": 76,
+    "001": 42,
+    "110": 9,
+    "101": 17,
+    "100": 28
+  },
+  "evaluation": {
+    "shots": 256,
+    "total_variation_distance": 0.037443204856294154,
+    "padding_shots": 0,
+    "winning_state": "000",
+    "winning_path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+    "winning_path_selected_for_execution": true,
+    "execution_selection_agreement": true,
+    "distribution_usable": true,
+    "path_distribution": [
+      {
+        "state": "000",
+        "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+        "shots": 76,
+        "observed_probability": 0.296875,
+        "expected_weight": 0.27575347764506064,
+        "weight_delta": 0.02112152235493936,
+        "model_probability": 0.8888888888888888,
+        "selected_for_execution": true
+      },
+      {
+        "state": "001",
+        "path": "x86-physical-flash-readback-passes-after-explicit-authority",
+        "shots": 42,
+        "observed_probability": 0.1640625,
+        "expected_weight": 0.17416009624659604,
+        "weight_delta": -0.010097596246596036,
+        "model_probability": 0.6666666666666666,
+        "selected_for_execution": false
+      },
+      {
+        "state": "010",
+        "path": "media-identity-release-or-protection-state-changes-before-write",
+        "shots": 41,
+        "observed_probability": 0.16015625,
+        "expected_weight": 0.16889900990482948,
+        "weight_delta": -0.008742759904829478,
+        "model_probability": 0.7777777777777778,
+        "selected_for_execution": false
+      },
+      {
+        "state": "011",
+        "path": "guarded-flash-refuses-or-readback-mismatches",
+        "shots": 37,
+        "observed_probability": 0.14453125,
+        "expected_weight": 0.13787673882253032,
+        "weight_delta": 0.00665451117746968,
+        "model_probability": 0.5555555555555556,
+        "selected_for_execution": false
+      },
+      {
+        "state": "100",
+        "path": "physical-boot-success-with-possible-network-or-regrow-defer",
+        "shots": 28,
+        "observed_probability": 0.109375,
+        "expected_weight": 0.10504897156324133,
+        "weight_delta": 0.0043260284367586666,
+        "model_probability": 0.4444444444444444,
+        "selected_for_execution": false
+      },
+      {
+        "state": "101",
+        "path": "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "shots": 17,
+        "observed_probability": 0.06640625,
+        "expected_weight": 0.0752055467820695,
+        "weight_delta": -0.008799296782069504,
+        "model_probability": 0.3333333333333333,
+        "selected_for_execution": false
+      },
+      {
+        "state": "110",
+        "path": "healthy-regrow-arms-trial",
+        "shots": 9,
+        "observed_probability": 0.03515625,
+        "expected_weight": 0.04495980192279914,
+        "weight_delta": -0.009803551922799143,
+        "model_probability": 0.2222222222222222,
+        "selected_for_execution": false
+      },
+      {
+        "state": "111",
+        "path": "physical-success-unlocks-universal-carrier-and-arm64-canaries",
+        "shots": 6,
+        "observed_probability": 0.0234375,
+        "expected_weight": 0.018096357112873565,
+        "weight_delta": 0.005341142887126435,
+        "model_probability": 0.1111111111111111,
+        "selected_for_execution": false
+      }
+    ],
+    "rank_agreement": {
+      "expected_path_order": [
+        "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+        "x86-physical-flash-readback-passes-after-explicit-authority",
+        "media-identity-release-or-protection-state-changes-before-write",
+        "guarded-flash-refuses-or-readback-mismatches",
+        "physical-boot-success-with-possible-network-or-regrow-defer",
+        "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "healthy-regrow-arms-trial",
+        "physical-success-unlocks-universal-carrier-and-arm64-canaries"
+      ],
+      "observed_path_order": [
+        "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+        "x86-physical-flash-readback-passes-after-explicit-authority",
+        "media-identity-release-or-protection-state-changes-before-write",
+        "guarded-flash-refuses-or-readback-mismatches",
+        "physical-boot-success-with-possible-network-or-regrow-defer",
+        "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "healthy-regrow-arms-trial",
+        "physical-success-unlocks-universal-carrier-and-arm64-canaries"
+      ],
+      "spearman_rank_correlation": 1.0,
+      "top_path_agreement": true
+    },
+    "selected_execution_mass": {
+      "expected": 0.27575347764506064,
+      "observed": 0.296875,
+      "delta": 0.02112152235493936
+    },
+    "maximum_absolute_weight_delta": 0.02112152235493936,
+    "learning": {
+      "full_field_weighted": true,
+      "execution_gate_changed": false,
+      "full_rank_agreement": true,
+      "recommendation": "retain-top-probability-execution-selection"
+    }
+  }
+}
