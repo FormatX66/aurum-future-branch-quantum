@@ -38,8 +38,24 @@ def _provider_rows(provider_evidence: Iterable[dict[str, Any]]) -> list[dict[str
             continue
         provider = str(raw.get("provider", raw.get("name", "unknown")))
         passed = bool(raw.get("passed", raw.get("success", False)))
-        cases = raw.get("cases_executed", raw.get("cases", 0))
-        failures = raw.get("failed_cases", raw.get("failures", []))
+        results = raw.get("results", [])
+        results = results if isinstance(results, list) else []
+        cases = raw.get(
+            "cases_executed",
+            raw.get("cases_per_run", raw.get("cases", len(results))),
+        )
+        failures = raw.get("failed_cases", raw.get("failures"))
+        if failures is None:
+            failures = []
+            for index, result in enumerate(results):
+                if not isinstance(result, dict):
+                    continue
+                evaluation = result.get("evaluation", {})
+                if isinstance(evaluation, dict) and not evaluation.get("passed", False):
+                    case = result.get("case", {})
+                    failures.append(
+                        str(case.get("case_id", index)) if isinstance(case, dict) else str(index)
+                    )
         rows.append(
             {
                 "provider": provider,
@@ -169,10 +185,13 @@ def render_interaction_frontier(frontier: dict[str, Any]) -> str:
         )
     providers = handoff.get("provider_sweeps", [])
     if providers:
-        lines.append("- Provider evidence: " + ", ".join(
-            f"{item['provider']}={'pass' if item['passed'] else 'fail'}({item['cases_executed']})"
-            for item in providers
-        ))
+        lines.append(
+            "- Provider evidence: "
+            + ", ".join(
+                f"{item['provider']}={'pass' if item['passed'] else 'fail'}({item['cases_executed']})"
+                for item in providers
+            )
+        )
     if handoff.get("unresolved_gates"):
         lines.append("- Unresolved gates: " + ", ".join(map(str, handoff["unresolved_gates"])))
     if handoff.get("missing_evidence"):
