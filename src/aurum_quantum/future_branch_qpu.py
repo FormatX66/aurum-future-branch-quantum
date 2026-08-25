@@ -251,7 +251,7 @@ def build_branch_sampling_circuit(analysis: dict[str, Any]) -> tuple[QuantumCirc
             "path": path["name"],
             "weight": weight,
             "model_probability": path.get("probability"),
-            "selected_for_execution": path.get("selected_for_execution", True),
+            "selected_for_execution": path.get("selected_for_execution", False),
             "execution_weight": path.get("execution_weight", weight),
             "real_boundary": path["real_boundary"],
             "disposition": path["disposition"],
@@ -269,7 +269,7 @@ def build_branch_sampling_circuit(analysis: dict[str, Any]) -> tuple[QuantumCirc
         ],
         "weighting_stage": "before-top-probability-execution-pruning",
         "execution_selected_paths": [
-            path["name"] for path in paths if path.get("selected_for_execution", True)
+            path["name"] for path in paths if path.get("selected_for_execution", False)
         ],
         "interpretation": (
             "weight the full ranked field, then execute only the separately gated "
@@ -294,6 +294,8 @@ def evaluate_branch_counts(
         abs(observed.get(state, 0.0) - expected.get(state, 0.0)) for state in states
     )
     winning_state = max(counts, key=counts.get)
+    unexpected_states = sorted(state for state in counts if state not in basis_map)
+    unexpected_shots = sum(counts[state] for state in unexpected_states)
     path_distribution = []
     for state, item in basis_map.items():
         count = int(counts.get(state, 0))
@@ -307,7 +309,7 @@ def evaluate_branch_counts(
                 "expected_weight": float(item["weight"]),
                 "weight_delta": observed_probability - float(item["weight"]),
                 "model_probability": item.get("model_probability"),
-                "selected_for_execution": item.get("selected_for_execution", True),
+                "selected_for_execution": item.get("selected_for_execution", False),
             }
         )
     path_distribution.sort(
@@ -345,19 +347,25 @@ def evaluate_branch_counts(
         abs(item["weight_delta"]) for item in path_distribution
     )
     winning_path = basis_map.get(winning_state, {}).get("path")
-    winning_path_selected = bool(
-        basis_map.get(winning_state, {}).get("selected_for_execution", True)
+    winning_state_declared = winning_state in basis_map
+    winning_path_selected = winning_state_declared and bool(
+        basis_map[winning_state].get("selected_for_execution", False)
     )
-    distribution_usable = total_variation_distance <= 0.50
+    distribution_usable = (
+        total_variation_distance <= 0.50 and winning_state_declared
+    )
     return {
         "shots": total,
         "total_variation_distance": total_variation_distance,
         "padding_shots": sum(counts.get(state, 0) for state in padding),
         "winning_state": winning_state,
+        "winning_state_declared": winning_state_declared,
         "winning_path": winning_path,
         "winning_path_selected_for_execution": winning_path_selected,
         "execution_selection_agreement": winning_path_selected,
         "distribution_usable": distribution_usable,
+        "unexpected_states": unexpected_states,
+        "unexpected_shots": unexpected_shots,
         "path_distribution": path_distribution,
         "rank_agreement": {
             "expected_path_order": expected_order,

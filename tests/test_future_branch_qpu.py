@@ -89,6 +89,24 @@ def test_qpu_divergence_requires_review_before_execution() -> None:
     assert evaluation["learning"]["recommendation"] == "review-model-qpu-divergence-before-execution"
 
 
+def test_undeclared_qpu_winner_fails_closed() -> None:
+    _, reference = build_branch_sampling_circuit(_analysis())
+    evaluation = evaluate_branch_counts(
+        {"00": 10, "01": 5, "10": 5, "11": 80}, reference
+    )
+
+    assert evaluation["winning_state"] == "11"
+    assert evaluation["winning_state_declared"] is False
+    assert evaluation["winning_path"] is None
+    assert evaluation["winning_path_selected_for_execution"] is False
+    assert evaluation["execution_selection_agreement"] is False
+    assert evaluation["distribution_usable"] is False
+    assert evaluation["unexpected_states"] == ["11"]
+    assert evaluation["unexpected_shots"] == 80
+    assert evaluation["learning"]["execution_gate_changed"] is False
+    assert evaluation["learning"]["recommendation"] == "review-model-qpu-divergence-before-execution"
+
+
 def test_ineligible_field_refuses_circuit() -> None:
     analysis = _analysis()
     analysis["qpu_eligible"] = False

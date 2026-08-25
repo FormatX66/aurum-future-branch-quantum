@@ -59,3 +59,17 @@ def test_seed_build_refuses_unknown_schema(tmp_path: Path) -> None:
             seed_path,
             authority_commit="2" * 40,
         )
+
+
+def test_seed_build_refuses_corrupted_artifact_hash(tmp_path: Path) -> None:
+    manifest_path, seed_path = _write_seed_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["artifacts"]["x86"]["sha256"] = "corrupted"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="artifacts.x86.sha256"):
+        load_aurum_seed_build(
+            manifest_path,
+            seed_path,
+            authority_commit="2" * 40,
+        )
