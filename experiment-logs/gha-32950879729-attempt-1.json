@@ -1,0 +1,172 @@
+{
+  "evidence": {
+    "aurum_seed_build": {
+      "artifact_hashes": {
+        "pi": "82f70b381f54a5f7c09358c94981bd423b0288d22de78d24cd17c75c2b6c862f",
+        "x86": "b5c1bfa6f6ca2945d0e95c42f0302e5e6def18e7b415e8fb701fe6f90a99dd32"
+      },
+      "authority_commit": "e2cd934ec52877c702a48aa29e74bf03ac704ec6",
+      "build_source_commit": "8812634ae2296db673b9de135c43a1119e885647",
+      "build_state": "READY_TO_FLASH",
+      "combined_fingerprint": "0c91ca9ad540278cf3362407e8c81ff363269b667d8e11801d7b4e98fae24284",
+      "deterministic_seed": 1852030145,
+      "future_branch_seed_sha256": "148ee83e62f85702fd811d7777cd454f20ba842d07c267d154381991bbdc43fe",
+      "gates": {
+        "combined_hash_reverification": "passed",
+        "guardian_forced_rollback": "pending",
+        "physical_boot": "pending",
+        "pi_build": "passed",
+        "pi_static_recovery_payload": "passed",
+        "published_artifacts": "passed",
+        "x86_bios_boot_smoke": "passed",
+        "x86_boot_proof_marker": "passed",
+        "x86_build": "passed",
+        "x86_uefi_boot_smoke": "passed"
+      },
+      "manifest_sha256": "fd790065def688ad410072f47c04bc6775645725918bd27183c2c2228d350512",
+      "next_gate": "physical-flash-and-boot-proof",
+      "source_repository": "https://github.com/FormatX66/BoxBrain",
+      "unresolved_gates": [
+        "guardian_forced_rollback",
+        "physical_boot"
+      ]
+    },
+    "branch_state_sha256": "eebdfe10448efdc8edb80553cfdb0ad8e76dbdd79b9945ad7bbeca601feb9904",
+    "calibration_sha256": "8431f00f73b22568eb1b26dea43a8f2cb40f33a51f29c73f99a124693bc4aa4f",
+    "candidate": {
+      "schema": "aurum-future-branch-qpu-candidate-v1",
+      "sha256": "0fe93bd2bfc528a36f1c603f987444a856bac8aab70c32d7056a779a41adced3"
+    },
+    "providers": [
+      {
+        "cases_executed": 9,
+        "cycle": 16,
+        "effective_cycle": 16,
+        "evidence_sha256": "4e3ffd71ca42bb7578484c3135ebad5ade0acf4a89d1f1e5f23a05076b42c29f",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "google"
+      },
+      {
+        "cases_executed": 9,
+        "cycle": 16,
+        "effective_cycle": 16,
+        "evidence_sha256": "5f6d3fc88cacf5fc8cd81f738228cb0071986086e836968ee2ecf6d78367a50b",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "microsoft"
+      }
+    ]
+  },
+  "experiment_id": "gha-32950879729-attempt-1",
+  "failures": [],
+  "hypotheses": [
+    {
+      "confidence_basis": "Canonical Future Branch model probability derived from the live upstream rank.",
+      "evidence": [
+        "selected_count=1",
+        "population_size=8",
+        "selected_path=fresh-authority-triggers-live-reproof-and-guarded-preflight"
+      ],
+      "hypothesis": "The live highest-probability Future Branch path is the only path retained from the top 5% field.",
+      "id": "top-five-percent-probability-selection",
+      "outcome": "supported",
+      "probability": 0.8888888888888888
+    },
+    {
+      "confidence_basis": "Observed partial plus miss predictions divided by calibration events.",
+      "evidence": [
+        "events=13",
+        "partial=5",
+        "miss=3",
+        "threshold=0.5"
+      ],
+      "hypothesis": "The calibrated partial-or-miss rate remains high enough to justify branch-ranking preparation.",
+      "id": "high-failure-routing-gate",
+      "outcome": "supported",
+      "probability": 0.6153846153846154
+    },
+    {
+      "confidence": 1.0,
+      "confidence_basis": "Observed passing-provider fraction in this workflow run.",
+      "evidence": [
+        "google:pass:9-cases",
+        "microsoft:pass:9-cases"
+      ],
+      "hypothesis": "Every active credential-free provider sweep completes its selected seeded cases.",
+      "id": "provider-stack-reproducibility",
+      "outcome": "supported"
+    }
+  ],
+  "next_branch_updates": [
+    {
+      "disposition": "wait-boundary",
+      "next": "write only if every live proof still matches the one-shot authority; otherwise fail closed and return to read-only discovery",
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "probability": 0.8888888888888888,
+      "status": "held-at-real-boundary"
+    },
+    {
+      "pruned_count": 7,
+      "pruned_paths": [
+        "media-identity-release-or-protection-state-changes-before-write",
+        "x86-physical-flash-readback-passes-after-explicit-authority",
+        "guarded-flash-refuses-or-readback-mismatches",
+        "physical-boot-success-with-possible-network-or-regrow-defer",
+        "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "healthy-regrow-arms-trial",
+        "physical-success-unlocks-universal-carrier-and-arm64-canaries"
+      ],
+      "reconsider_when": "branch state, evidence, dependency, hypothesis, or authority changes"
+    }
+  ],
+  "outcomes": {
+    "hardware_submission": false,
+    "overall": "success",
+    "provider_sweeps": [
+      {
+        "cases_executed": 9,
+        "cycle": 16,
+        "effective_cycle": 16,
+        "evidence_sha256": "4e3ffd71ca42bb7578484c3135ebad5ade0acf4a89d1f1e5f23a05076b42c29f",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "google"
+      },
+      {
+        "cases_executed": 9,
+        "cycle": 16,
+        "effective_cycle": 16,
+        "evidence_sha256": "5f6d3fc88cacf5fc8cd81f738228cb0071986086e836968ee2ecf6d78367a50b",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "microsoft"
+      }
+    ],
+    "router": "success",
+    "selected_branch": {
+      "path": "fresh-authority-triggers-live-reproof-and-guarded-preflight",
+      "physical_or_destructive_effect_executed": false,
+      "probability": 0.8888888888888888,
+      "status": "held-at-real-boundary"
+    }
+  },
+  "recorded_at": "2026-08-26T09:03:54.129070+00:00",
+  "run": {
+    "resumed_from_run_id": null,
+    "run_attempt": 1,
+    "run_id": "32950879729",
+    "runner_commit": "195b1dfc7ae1bfd0996ffe0a6fca1162d62d60e4",
+    "url": "https://github.com/FormatX66/aurum-future-branch-quantum/actions/runs/32950879729",
+    "workflow": "continuous-variable-flow"
+  },
+  "schema": "aurum-future-branch-experiment-log-v1",
+  "selection": {
+    "population_size": 8,
+    "probability_cutoff": 0.8888888888888888,
+    "pruned_count": 7,
+    "rule": "highest-model-probability-ceiling",
+    "selected_count": 1,
+    "top_probability_fraction": 0.05
+  }
+}
