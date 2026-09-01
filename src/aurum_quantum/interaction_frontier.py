@@ -18,6 +18,21 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _candidate_analysis(candidate: dict[str, Any]) -> dict[str, Any]:
+    """Return the analysis payload from either supported candidate shape.
+
+    The QPU runner writes an ``aurum-future-branch-qpu-candidate-v1`` envelope
+    whose machine-path and Aurum seed evidence live under ``analysis``. Older
+    callers and unit tests may still pass that analysis object directly. Keep
+    both shapes valid so the interaction handoff cannot silently degrade when
+    the durable candidate envelope is used.
+    """
+    if candidate.get("schema") == "aurum-future-branch-qpu-candidate-v1":
+        analysis = candidate.get("analysis")
+        return analysis if isinstance(analysis, dict) else {}
+    return candidate
+
+
 def _selected_machine_path(candidate: dict[str, Any]) -> dict[str, Any] | None:
     selected = candidate.get("selected_machine_paths")
     if isinstance(selected, list) and selected:
@@ -81,7 +96,8 @@ def build_interaction_frontier(
     a reminder, notification, timer, or morning task. Nothing is delivered until a
     real user interaction asks for it.
     """
-    candidate = candidate or {}
+    raw_candidate = candidate or {}
+    candidate = _candidate_analysis(raw_candidate)
     run = run or {}
     recorded_at = recorded_at or _utc_now()
     machine = _selected_machine_path(candidate)
@@ -102,7 +118,7 @@ def build_interaction_frontier(
         )
 
     missing: list[str] = []
-    if not candidate:
+    if not raw_candidate:
         missing.append("future-branch-candidate")
     if machine is None:
         missing.append("selected-machine-path")
@@ -142,7 +158,7 @@ def build_interaction_frontier(
     }
 
     packet_source = json.dumps(
-        {"candidate": candidate, "providers": providers, "run": run},
+        {"candidate": raw_candidate, "providers": providers, "run": run},
         sort_keys=True,
         separators=(",", ":"),
         default=str,
