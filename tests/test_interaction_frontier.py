@@ -32,6 +32,15 @@ def _candidate() -> dict:
     }
 
 
+def _wrapped_candidate() -> dict:
+    return {
+        "schema": "aurum-future-branch-qpu-candidate-v1",
+        "analysis": _candidate(),
+        "circuit": None,
+        "submission": None,
+    }
+
+
 def _providers() -> list[dict]:
     return [
         {
@@ -63,6 +72,25 @@ def test_frontier_is_prepared_but_never_scheduled() -> None:
     assert frontier["handoff"]["status"] == "ready"
     assert frontier["handoff"]["provider_sweeps"][0]["cases_executed"] == 9
     assert frontier["handoff"]["selected_machine_path"]["probability"] > 0.88
+
+
+def test_qpu_candidate_envelope_preserves_ready_handoff_evidence() -> None:
+    frontier = build_interaction_frontier(
+        candidate=_wrapped_candidate(),
+        provider_evidence=_providers(),
+        run={"run_id": "126", "run_attempt": "1"},
+        recorded_at="2026-09-01T20:00:00+00:00",
+    )
+    handoff = frontier["handoff"]
+    assert handoff["status"] == "ready"
+    assert handoff["missing_evidence"] == []
+    assert handoff["build_state"] == "READY_TO_FLASH"
+    assert handoff["next_gate"] == "physical-flash-and-boot-proof"
+    assert handoff["selected_machine_path"]["path"] == (
+        "fresh-authority-triggers-live-reproof-and-guarded-preflight"
+    )
+    assert handoff["proof"]["branch_state_sha256"] == "branch-hash"
+    assert handoff["proof"]["combined_fingerprint"] == "fingerprint"
 
 
 def test_missing_evidence_degrades_instead_of_fabricating_readiness() -> None:
