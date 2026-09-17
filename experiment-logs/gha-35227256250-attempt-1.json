@@ -1,0 +1,172 @@
+{
+  "evidence": {
+    "aurum_seed_build": {
+      "artifact_hashes": {
+        "pi": "bda333f5b162cc22c010f61b87ec94e2c690c30535f02ad952e9c2cde33e100b",
+        "x86": "c851ec111a1af5cf2e39742ddcf25d59725d258f5a00df8810dbbd166abfa084"
+      },
+      "authority_commit": "3afa0de8b139f0c1832d19a43b076aa6075d0d6a",
+      "build_source_commit": "4eb31e8071cdc9705f4f5abea5af764ef35e498b",
+      "build_state": "READY_TO_FLASH",
+      "combined_fingerprint": "8a67443e3935d64c2d51f2df2785496adeacf56de91863b69fd8d46bfe75c015",
+      "deterministic_seed": 1308909258,
+      "future_branch_seed_sha256": "148ee83e62f85702fd811d7777cd454f20ba842d07c267d154381991bbdc43fe",
+      "gates": {
+        "combined_hash_reverification": "passed",
+        "guardian_forced_rollback": "pending",
+        "physical_boot": "pending",
+        "pi_build": "passed",
+        "pi_static_recovery_payload": "passed",
+        "published_artifacts": "passed",
+        "x86_bios_boot_smoke": "passed",
+        "x86_boot_proof_marker": "passed",
+        "x86_build": "passed",
+        "x86_uefi_boot_smoke": "passed"
+      },
+      "manifest_sha256": "0c9fd50e5f5cd33e6f35d7ce4c0905627051278645f0f08e5bf31953a3aeca6c",
+      "next_gate": "physical-flash-and-boot-proof",
+      "source_repository": "https://github.com/FormatX66/BoxBrain",
+      "unresolved_gates": [
+        "guardian_forced_rollback",
+        "physical_boot"
+      ]
+    },
+    "branch_state_sha256": "11280c2c9fddfe00502bbee2a855417f44e2a4aa662a215aa6b50842f3b258ae",
+    "calibration_sha256": "8431f00f73b22568eb1b26dea43a8f2cb40f33a51f29c73f99a124693bc4aa4f",
+    "candidate": {
+      "schema": "aurum-future-branch-qpu-candidate-v1",
+      "sha256": "692f9a43980a480ae6f7a9f6a26a07b00237d35e83c9b13e636b475c07517d6a"
+    },
+    "providers": [
+      {
+        "cases_executed": 9,
+        "cycle": 102,
+        "effective_cycle": 105,
+        "evidence_sha256": "5a215ca3d691812f4895c92da887770c601bc57711d9cfbd38c7f389a6fca6b1",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "google"
+      },
+      {
+        "cases_executed": 9,
+        "cycle": 102,
+        "effective_cycle": 105,
+        "evidence_sha256": "1f5836052afe9996b811d2be2432ca18144f1cbb267290e1f8d0568f973aeece",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "microsoft"
+      }
+    ]
+  },
+  "experiment_id": "gha-35227256250-attempt-1",
+  "failures": [],
+  "hypotheses": [
+    {
+      "confidence_basis": "Canonical Future Branch model probability derived from the live upstream rank.",
+      "evidence": [
+        "selected_count=1",
+        "population_size=8",
+        "selected_path=current-release-flash-readback-proven-awaiting-physical-boot"
+      ],
+      "hypothesis": "The live highest-probability Future Branch path is the only path retained from the top 5% field.",
+      "id": "top-five-percent-probability-selection",
+      "outcome": "supported",
+      "probability": 0.8888888888888888
+    },
+    {
+      "confidence_basis": "Observed partial plus miss predictions divided by calibration events.",
+      "evidence": [
+        "events=13",
+        "partial=5",
+        "miss=3",
+        "threshold=0.5"
+      ],
+      "hypothesis": "The calibrated partial-or-miss rate remains high enough to justify branch-ranking preparation.",
+      "id": "high-failure-routing-gate",
+      "outcome": "supported",
+      "probability": 0.6153846153846154
+    },
+    {
+      "confidence": 1.0,
+      "confidence_basis": "Observed passing-provider fraction in this workflow run.",
+      "evidence": [
+        "google:pass:9-cases",
+        "microsoft:pass:9-cases"
+      ],
+      "hypothesis": "Every active credential-free provider sweep completes its selected seeded cases.",
+      "id": "provider-stack-reproducibility",
+      "outcome": "supported"
+    }
+  ],
+  "next_branch_updates": [
+    {
+      "disposition": "wait-boundary",
+      "next": "boot the proven current-release media on the physical x86 target and collect formal Tiny Seed ready/boot-proof evidence without inferring success from the flash receipt",
+      "path": "current-release-flash-readback-proven-awaiting-physical-boot",
+      "probability": 0.8888888888888888,
+      "status": "held-at-real-boundary"
+    },
+    {
+      "pruned_count": 7,
+      "pruned_paths": [
+        "media-identity-release-or-protection-state-changes-before-write",
+        "x86-physical-flash-readback-passes-after-explicit-authority",
+        "guarded-flash-refuses-or-readback-mismatches",
+        "physical-boot-success-with-possible-network-or-regrow-defer",
+        "canonical-carrier-fails-while-direct-uefi-fallback-remains-virtually-proven",
+        "healthy-regrow-arms-trial",
+        "physical-success-unlocks-universal-carrier-and-arm64-canaries"
+      ],
+      "reconsider_when": "branch state, evidence, dependency, hypothesis, or authority changes"
+    }
+  ],
+  "outcomes": {
+    "hardware_submission": false,
+    "overall": "success",
+    "provider_sweeps": [
+      {
+        "cases_executed": 9,
+        "cycle": 102,
+        "effective_cycle": 105,
+        "evidence_sha256": "5a215ca3d691812f4895c92da887770c601bc57711d9cfbd38c7f389a6fca6b1",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "google"
+      },
+      {
+        "cases_executed": 9,
+        "cycle": 102,
+        "effective_cycle": 105,
+        "evidence_sha256": "1f5836052afe9996b811d2be2432ca18144f1cbb267290e1f8d0568f973aeece",
+        "failed_cases": [],
+        "passed": true,
+        "provider": "microsoft"
+      }
+    ],
+    "router": "success",
+    "selected_branch": {
+      "path": "current-release-flash-readback-proven-awaiting-physical-boot",
+      "physical_or_destructive_effect_executed": false,
+      "probability": 0.8888888888888888,
+      "status": "held-at-real-boundary"
+    }
+  },
+  "recorded_at": "2026-09-17T13:29:19.261308+00:00",
+  "run": {
+    "resumed_from_run_id": null,
+    "run_attempt": 1,
+    "run_id": "35227256250",
+    "runner_commit": "aa311844ff2477f0522933abde62ee7317154761",
+    "url": "https://github.com/FormatX66/aurum-future-branch-quantum/actions/runs/35227256250",
+    "workflow": "continuous-variable-flow"
+  },
+  "schema": "aurum-future-branch-experiment-log-v1",
+  "selection": {
+    "population_size": 8,
+    "probability_cutoff": 0.8888888888888888,
+    "pruned_count": 7,
+    "rule": "highest-model-probability-ceiling",
+    "selected_count": 1,
+    "top_probability_fraction": 0.05
+  }
+}
