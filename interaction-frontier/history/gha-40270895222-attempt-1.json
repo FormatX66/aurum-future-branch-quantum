@@ -1,0 +1,83 @@
+{
+  "activation": "next-user-interaction",
+  "handoff": {
+    "build_state": "READY_TO_FLASH",
+    "missing_evidence": [],
+    "next_gate": "physical-flash-and-boot-proof",
+    "proof": {
+      "branch_state_sha256": "11280c2c9fddfe00502bbee2a855417f44e2a4aa662a215aa6b50842f3b258ae",
+      "calibration_sha256": "8431f00f73b22568eb1b26dea43a8f2cb40f33a51f29c73f99a124693bc4aa4f",
+      "combined_fingerprint": "8a67443e3935d64c2d51f2df2785496adeacf56de91863b69fd8d46bfe75c015",
+      "future_branch_seed_sha256": "148ee83e62f85702fd811d7777cd454f20ba842d07c267d154381991bbdc43fe"
+    },
+    "provider_sweeps": [
+      {
+        "cases_executed": 9,
+        "failed_cases": [],
+        "passed": true,
+        "provider": "google"
+      },
+      {
+        "cases_executed": 9,
+        "failed_cases": [],
+        "passed": true,
+        "provider": "microsoft"
+      }
+    ],
+    "render_contract": {
+      "fetch_only_newer_deltas_when_possible": true,
+      "never_claim_delivery_before_user_interaction": true,
+      "never_promote_unverified_physical_state": true,
+      "use_prepared_packet_first": true
+    },
+    "selected_machine_path": {
+      "disposition": "wait-boundary",
+      "next": "boot the proven current-release media on the physical x86 target and collect formal Tiny Seed ready/boot-proof evidence without inferring success from the flash receipt",
+      "path": "current-release-flash-readback-proven-awaiting-physical-boot",
+      "probability": 0.8888888888888888,
+      "real_boundary": true
+    },
+    "status": "ready",
+    "unresolved_gates": [
+      "guardian_forced_rollback",
+      "physical_boot"
+    ]
+  },
+  "interaction_branches": [
+    {
+      "delivery": "on-user-interaction-only",
+      "name": "status-handoff",
+      "prepared": true,
+      "prior_probability": 0.6,
+      "purpose": "Summarize what changed, what is ready, what is blocked, and the proof."
+    },
+    {
+      "delivery": "on-user-interaction-only",
+      "name": "what-next",
+      "prepared": true,
+      "prior_probability": 0.25,
+      "purpose": "State the highest-value next action and whether it is machine-safe or a real human boundary."
+    },
+    {
+      "delivery": "on-user-interaction-only",
+      "name": "proof-check",
+      "prepared": true,
+      "prior_probability": 0.15,
+      "purpose": "Answer whether Future Branch actually worked from durable run evidence, not activity alone."
+    }
+  ],
+  "notification": false,
+  "recorded_at": "2026-10-26T04:49:17.232901+00:00",
+  "run": {
+    "router_outcome": "success",
+    "run_attempt": "1",
+    "run_id": "40270895222",
+    "runner_commit": "00e7a7fcb242621983b5dbd0507c9d4255ffefc5",
+    "workflow": "continuous-variable-flow",
+    "workflow_url": "https://github.com/FormatX66/aurum-future-branch-quantum/actions/runs/40270895222"
+  },
+  "scheduled_delivery": false,
+  "schema": "aurum-future-branch-interaction-frontier-v1",
+  "selected_interaction_branch": "status-handoff",
+  "source_sha256": "39ba7fd6ff0418228d375619761cc8491c2f068e88a129aed2fdf18e10799400"
+}
